@@ -27,6 +27,7 @@
         <a href="#story">Our Story</a>
         <a href="#shop">Shop</a>
         <a href="#seasonal">Seasonal</a>
+        <a href="#order">Order</a>
         <a href="#ordering">Ordering &amp; Care</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -130,6 +131,18 @@
       </div>
     </section>
 
+    <!-- ORDER NOW (opens the order form; also reachable from the bag's checkout button) -->
+    <section class="order-cta" id="order">
+      <div class="container order-cta-inner">
+        <div>
+          <p class="eyebrow dark">Place an Order</p>
+          <h2>Ready for something <em>sweet?</em></h2>
+          <p class="section-sub">Choose your treats, tell us how you&rsquo;d like to receive them and we&rsquo;ll email you to confirm your order and payment. No payment is taken on this site.</p>
+        </div>
+        <button type="button" class="btn btn-gold" data-order-open>Order now</button>
+      </div>
+    </section>
+
     <!-- ORDERING & CARE -->
     <section class="ordering section" id="ordering">
       <div class="container">
@@ -148,7 +161,7 @@
           </div>
           <div class="info-card">
             <h3>Paying</h3>
-            <p>We accept credit and debit cards (secure online card checkout is coming soon) and Cash App.</p>
+            <p>We accept Cash App, credit and debit cards (we&rsquo;ll email you a payment link) and cash at markets and events. No payment is taken on this site.</p>
             <!-- TODO(owner): add the Cash App $cashtag here once confirmed — do not guess it. -->
           </div>
           <div class="info-card">
@@ -205,21 +218,92 @@
     <div class="cart-body" id="cartItems"></div>
     <div class="cart-foot">
       <div class="cart-row"><span>Subtotal</span><strong id="cartSubtotal">$0.00</strong></div>
-      <p class="cart-note">Shipping and taxes calculated at checkout. Orders ship with cold packs.</p>
-      <button class="btn btn-gold btn-block" id="checkoutBtn">Checkout</button>
+      <p class="cart-note">No payment is taken online. We&rsquo;ll email you to confirm your order, shipping and payment. Orders ship with cold packs.</p>
+      <button class="btn btn-gold btn-block" id="checkoutBtn">Continue to order</button>
       <button class="text-btn" id="clearCart">Clear bag</button>
     </div>
   </aside>
 
-  <!-- CHECKOUT PLACEHOLDER MODAL -->
-  <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
-    <div class="modal-card">
-      <button class="icon-btn modal-x" id="modalClose" aria-label="Close">&times;</button>
-      <p class="eyebrow dark">Almost there</p>
-      <h3 id="modalTitle">Checkout coming soon</h3>
-      <p>Secure card payments will connect via <strong>Stripe</strong> soon. Your bag has been saved on this device, so nothing will be lost.</p>
-      <div class="modal-summary" id="modalSummary"></div>
-      <button class="btn btn-dark btn-block" id="modalOk">Continue browsing</button>
+  <!-- ORDER FORM MODAL: emails the order via FormSubmit (see HANDOFF.md "Order form"). No payment is taken. -->
+  <div class="modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="orderTitle" hidden>
+    <div class="modal-card order-card">
+      <button type="button" class="icon-btn modal-x" id="orderClose" aria-label="Close order form">&times;</button>
+
+      <form id="orderForm" class="order-form" novalidate>
+        <p class="eyebrow dark">Place an Order</p>
+        <h3 id="orderTitle">Your order</h3>
+        <p class="order-intro">Fill in your details and we&rsquo;ll email you to confirm your order and payment. No payment is taken on this site.</p>
+
+        <fieldset class="of-group">
+          <legend>Your treats</legend>
+          <div id="orderItems"></div>
+          <p class="of-error" id="itemsError" role="alert" hidden>Please choose at least one treat.</p>
+        </fieldset>
+
+        <fieldset class="of-group">
+          <legend>Your details</legend>
+          <div class="of-row">
+            <div class="of-field">
+              <label for="ofName">Full name <span class="req" aria-hidden="true">*</span></label>
+              <input id="ofName" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="of-field">
+              <label for="ofEmail">Email <span class="req" aria-hidden="true">*</span></label>
+              <input id="ofEmail" name="email" type="email" autocomplete="email" required />
+            </div>
+          </div>
+          <div class="of-field">
+            <label for="ofPhone">Phone <span class="opt">(optional)</span></label>
+            <input id="ofPhone" name="phone" type="tel" autocomplete="tel" />
+          </div>
+        </fieldset>
+
+        <fieldset class="of-group">
+          <legend>Delivery <span class="req" aria-hidden="true">*</span></legend>
+          <div class="of-choices">
+            <label class="of-choice"><input type="radio" name="delivery" value="Ship to me" checked required /> <span>Ship to me</span></label>
+            <label class="of-choice"><input type="radio" name="delivery" value="Pick up at a market or event" /> <span>Pick up at a market or event</span></label>
+          </div>
+          <div class="of-field" id="addressField">
+            <label for="ofAddress">Shipping address <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="ofAddress" name="shipping_address" rows="3" autocomplete="street-address" required></textarea>
+          </div>
+          <p class="of-note">Orders ship with cold packs. Shipping pauses during the hottest months of the year, so the chocolate never has to brave the heat.</p>
+        </fieldset>
+
+        <fieldset class="of-group">
+          <legend>Preferred payment <span class="req" aria-hidden="true">*</span></legend>
+          <div class="of-choices">
+            <label class="of-choice"><input type="radio" name="payment" value="Cash App" required /> <span>Cash App</span></label>
+            <label class="of-choice"><input type="radio" name="payment" value="Card (send me a payment link)" /> <span>Card <small>(we&rsquo;ll send a link)</small></span></label>
+            <label class="of-choice"><input type="radio" name="payment" value="Cash at a market" /> <span>Cash at a market</span></label>
+          </div>
+        </fieldset>
+
+        <div class="of-field">
+          <label for="ofNotes">Notes or occasion <span class="opt">(optional)</span></label>
+          <textarea id="ofNotes" name="notes" rows="3" placeholder="A birthday, a gift, a date you need it by&hellip;"></textarea>
+        </div>
+
+        <!-- Honeypot: real people never see or fill this; FormSubmit drops submissions where it's filled. -->
+        <div class="of-honey" aria-hidden="true">
+          <label for="ofHoney">Leave this empty</label>
+          <input id="ofHoney" name="_honey" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <p class="of-error" id="formError" role="alert" hidden></p>
+        <button type="submit" class="btn btn-gold btn-block" id="orderSubmit">Send my order</button>
+        <p class="of-fine">By sending, you agree to be contacted by email about this order. Fields marked <span class="req">*</span> are required.</p>
+      </form>
+
+      <div class="order-success" id="orderSuccess" hidden tabindex="-1">
+        <span class="os-mark" aria-hidden="true">&#10022;</span>
+        <p class="eyebrow dark">Order received</p>
+        <h3>Thank you!</h3>
+        <p>Genelle will email you to confirm your order and payment.</p>
+        <div class="modal-summary" id="successSummary"></div>
+        <button type="button" class="btn btn-dark btn-block" id="successOk">Continue browsing</button>
+      </div>
     </div>
   </div>
 

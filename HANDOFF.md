@@ -1,6 +1,6 @@
 # Zafe Chokola Website — Handoff Guide
 
-_Last updated: Friday, Oct 2, 2026, ~6:05 AM ET (retypeset to a luxe serif look per Sherwinn; committed locally, not pushed). Audience: AI agents and developers picking up this project._
+_Last updated: Friday, Oct 2, 2026, ~7:45 PM ET (emailed order form via FormSubmit added; committed locally, not pushed). Audience: AI agents and developers picking up this project._
 
 ---
 
@@ -10,7 +10,7 @@ _Last updated: Friday, Oct 2, 2026, ~6:05 AM ET (retypeset to a luxe serif look 
 |---|---|
 | **Brand** | Zafe Chokola: luxe-feeling chocolate treats with Caribbean (St. Lucian) roots; "chocolate made to evoke a joyful memory" |
 | **Owner** | Sherwinn (site owner/approver). Content comes from the founder's questionnaire (`/workspace/shared/zafe-chokola/genelle-answers.md`, submitted 10/1/26 10:45 PM ET). On the site she is credited only as **"Founder & Chocolatier"**: no personal name, no personal photo (her request). |
-| **Status** | Customised from the founder's questionnaire (Oct 1) and her own graded photos in the hero, story and seasonal tiles (Oct 2). Both are on `origin/main` (up to `425db95`). Oct 2, ~6 AM ET: **retypeset to a refined luxe look** (Cormorant Garamond + Jost) per Sherwinn. That commit is **local only, NOT pushed** until he approves. Product cards still use stock; see §9. |
+| **Status** | Customised from the founder's questionnaire (Oct 1) and her own graded photos in the hero, story and seasonal tiles (Oct 2). Both are on `origin/main` (up to `425db95`). The luxe retypeset (Cormorant Garamond + Jost, `3adf601`) is also on `origin/main`. Oct 2, ~7:45 PM ET: **order form emailed via FormSubmit** (§4a) replaces the "Checkout coming soon" modal. That commit is **local only, NOT pushed** until he approves. Product cards still use stock; see §9. |
 | **Domain** | Founder owns **Thechocolateaffair.net**. **Not connected yet** (no `CNAME` file, no DNS changes). Connecting it needs approval; see §10.3. |
 | **Stack** | Plain HTML + CSS + vanilla JS. **No build step, no framework, no dependencies.** |
 | **Design reference** | Inspired by the *feel* of https://sanaachocolates.com/ — **not copied**. No text, images, logo, or brand assets from that site are used, and none may be added (see §11). |
@@ -48,12 +48,13 @@ _Last updated: Friday, Oct 2, 2026, ~6:05 AM ET (retypeset to a luxe serif look 
 4. **Our Story** (`#story`): photo slot `images/story.jpg` (founder's Easter eggs) with thin gold offset frame + "Made with joy" italic stamp, founder's story, signed "Founder & Chocolatier"
 5. **Values** (`.values`): Made with joy · Milk chocolate (signature) · Seasonal fun · Cold-packed
 6. **Shop** (`#shop`, grid `#collectionGrid`): product cards rendered from `js/products.js` (`category: "collection"`), 3 columns on desktop
+6a. **Order now** (`#order`, `.order-cta`): cream band with an "Order now" button (`data-order-open`) that opens the order form, for people who skip the bag. Also linked as "Order" in the nav.
 7. **Quote band** (`.band`): founder's mission line
 8. **Seasonal Collections** (`#seasonal`, dark): Valentine's, Easter, Halloween tiles with the founder's photos (`images/seasonal/*.jpg`, `.season.has-photo`); Birthdays tile is icon-only (no photo yet); no products/prices yet + "Gift cards: coming soon" note
-9. **Ordering & Care** (`#ordering`): Shipping, Markets & events, Paying (cards coming soon + Cash App), Freshness & storage, Damaged or melted, **Allergen notice** (`#allergens`)
+9. **Ordering & Care** (`#ordering`): Shipping, Markets & events, Paying (Cash App, cards via an emailed payment link, cash at markets; no payment on the site), Freshness & storage, Damaged or melted, **Allergen notice** (`#allergens`)
 10. **Footer** (`#contact`): tagline, Find Us (shipping / markets & events), Say Hello (email + Instagram), Coming Soon (gift cards, online checkout)
 11. *(Removed Oct 1, 2026: Gift Boxes, Kind Words/testimonials, Newsletter, address, pickup hours, phone, FB/Pinterest. See §9.)*
-12. **Cart drawer**, **checkout placeholder modal**, **toast** — overlays at the end of `<body>`
+12. **Cart drawer** (button "Continue to order"), **order form modal** (`#orderModal`, §4a), **toast**: overlays at the end of `<body>`
 
 Responsive breakpoints: `1024px` (3→2 product columns, 2-col info/season grids and footer), `860px` (mobile nav, stacked story), `560px` (1-col products/info/footer, compact header, full-width hero buttons).
 
@@ -79,13 +80,14 @@ The box is one persistent Linux machine shared by all of the user's agents, so t
 
 ```
 chocolate-site/
-├── index.html          # All page markup + overlays (cart drawer, checkout modal, toast)
+├── index.html          # All page markup + overlays (cart drawer, order form modal, toast)
 ├── css/styles.css      # All styles. Palette/fonts as CSS variables at top; responsive rules at bottom
 ├── js/products.js      # THE product catalogue (single source of truth) → window.ZC_PRODUCTS
 ├── js/main.js          # Renders product cards, image fallback, cart logic + localStorage, drawer/modal, mobile nav
 ├── images/             # Photo slots: hero.jpg, story.jpg, seasonal/*.jpg (founder photos, graded); products/*.jpg (stock); logo/ (empty); stock-backup/ (original stock). See images/README.md
 ├── tools/grade_photos.py # Colour-grades founder photos into the slots + writes before/after comparisons
 ├── tools/screenshot.py # Playwright: screenshots + cart smoke test (local file or any URL)
+├── tools/test_order_form.py # Playwright: order-form test with FormSubmit MOCKED (never sends) + form screenshots
 ├── README.md           # Short readme
 ├── HANDOFF.md          # This document
 ├── .nojekyll           # Tells GitHub Pages to serve files as-is (no Jekyll processing)
@@ -106,7 +108,7 @@ Script load order matters: `products.js` **must** load before `main.js` (both at
   - If you change the cart's data shape, bump the key (e.g. `.v2`) so old saved carts don't break.
   - If you **rename a product `id`**, existing customers' saved carts silently drop that item (harmless).
 - **UI**: "Add to bag" buttons (`data-add="<id>"`) → toast + count badge. Bag button opens a right-side drawer with thumbnails, −/+/typed quantity, line totals, Remove, Clear bag, subtotal. Esc / backdrop / × close it.
-- **Checkout button** (disabled when empty) opens a modal: **"Checkout coming soon — online payments will connect via Stripe"** with an order summary. The hook point is marked `// FUTURE:` in the `#checkoutBtn` click handler.
+- **Checkout button** ("Continue to order", disabled when the bag is empty) closes the drawer and opens the **order form** (§4a). No payment is taken on the site.
 - Prices are computed client-side from `products.js` — fine for display, but **never trust them for real charges** (see §10).
 
 ### `js/products.js` schema
@@ -126,6 +128,22 @@ Script load order matters: `products.js` **must** load before `main.js` (both at
 | `stripePaymentLink` | string | **Empty for now.** Future Stripe Payment Link URL (`https://buy.stripe.com/...`). Not read by any code yet. |
 
 Current products (real, from the founder's questionnaire): **Spooky Bars $8.00**, **Pumpkin Bites $20.00**, **Kids Pops $3.00 each** (all `collection`). Sizes/piece counts, ingredients and per-product photos are not provided yet, so descriptions make no ingredient claims. Signature flavour: milk chocolate.
+
+---
+
+## 4a. Order form (emailed via FormSubmit, no backend)
+
+Added Oct 2, 2026. Customers place an order that is emailed to the founder at **zafechokola@gmail.com**; she then emails them to confirm the order and arrange payment. **No payment is taken on the site.**
+
+- **Opened from:** the bag's "Continue to order" button (summary auto-filled from the bag, with an "Edit bag" link), or the "Order now" button in `#order` / any `[data-order-open]` element. If the bag is empty, the form shows quantity pickers for every product in `products.js` (Spooky Bars $8, Pumpkin Bites $20, Kids Pops $3 each) with live line totals and subtotal.
+- **Fields:** full name\*, email\*, phone, delivery\* (Ship to me / Pick up at a market or event), shipping address (shown and required only for "Ship to me"), preferred payment\* (Cash App / Card, we'll send a link / Cash at a market), notes or occasion, plus at least one item. Includes a note that shipping pauses in hot months, and native labels/legends/`role="alert"` errors.
+- **Submission** (`js/main.js`, `ORDER_ENDPOINT`): `fetch POST https://formsubmit.co/ajax/zafechokola@gmail.com` with JSON (`Content-Type`/`Accept: application/json`). Fields sent: `name, email, phone, delivery, shipping_address, payment, order` (one line per item: `2 × Spooky Bars @ $8.00 = $16.00`), `subtotal, notes`, plus FormSubmit controls `_subject: "New Zafe Chokola order from {name}"`, `_template: "table"`, `_captcha: "false"`, `_replyto: <customer email>` (so she can just hit Reply), and `_honey` (hidden honeypot input; FormSubmit discards submissions where it's filled).
+- **Success** (HTTP OK and `success` not `"false"`): the form is replaced by "Thank you! Genelle will email you to confirm your order and payment." with the order summary; the bag is cleared (only when ordering from the bag) and the form reset. Note: this message names Genelle, which is the only place her name appears on the site (as specified).
+- **Error** (network, HTTP error, or `success: "false"`): the form stays filled, and a friendly message offers a `mailto:Zafechokola@gmail.com` link prefilled with the whole order.
+- ⚠️ **Activation:** FormSubmit sends a **one-time activation email** to zafechokola@gmail.com on the **first real submission**. **No orders are delivered until Genelle clicks the link in it.** That first submission returns `success: "false"` (the customer sees the error + mailto fallback). So before announcing the form, have Genelle (or Sherwinn with her OK) send one test order from the live site, then click the activation link in her inbox (check spam).
+- **Hide the address later:** after activation, FormSubmit gives her a random alias (e.g. `https://formsubmit.co/ajax/abc123...`). Swap it into `ORDER_ENDPOINT` in `js/main.js` so the email isn't in the public source. (The email is also shown on the site anyway.)
+- FormSubmit is a free third-party service: no delivery guarantee, and it sees the order data. It's fine for now; a Stripe/Shopify checkout or a serverless form is the upgrade path (§10).
+- **Testing: never submit a real order during tests** (it triggers the activation email / sends her mail). Use `python3 tools/test_order_form.py`, which intercepts every `formsubmit.co` request in headless Chrome, checks the JSON payload, validation, cart clearing, pickers and error fallback, and writes `screenshots/order-form.png`, `order-form-mobile.png` and `order-success.png`.
 
 ---
 
@@ -172,6 +190,8 @@ python3 tools/screenshot.py                                        # local copy
 python3 tools/screenshot.py https://dupesdidit.github.io/zafe-chokola/   # live site
 ```
 Writes `screenshots/hero.png` (1440×900 viewport), `desktop.png` (1440 wide, full page), `mobile.png` (390 wide, full page, 1x). It also adds the first 2 products to the bag (currently Spooky Bars + Pumpkin Bites → expect count 2, subtotal $28.00), reloads, and prints counts/subtotal plus any console errors. Requires Python Playwright (installed on the box) and uses system Chrome at `/usr/bin/google-chrome` if present. Fixed-position elements (toast, drawer) can show up oddly in full-page shots — they are hidden with `visibility: hidden` when inactive for this reason.
+
+Order form: `python3 tools/test_order_form.py` (FormSubmit is mocked; prints PASS/FAIL per check and `RESULT: ALL PASS`). See §4a.
 
 ---
 
@@ -224,7 +244,7 @@ Still open:
 - [ ] **Shipping details**: where she ships to, rates, which months shipping pauses, order lead time/minimums: not provided. Copy says only "pauses during the hottest months".
 - [ ] **Markets/events schedule**: none given; copy points to Instagram.
 - [ ] **Location/heritage-inspired flavours**: no answer to "Where are you based?"; site mentions only her St. Lucian roots, no business location.
-- [ ] **Checkout**: placeholder modal, no payments ("coming soon via Stripe").
+- [x] **Ordering**: emailed order form via FormSubmit (§4a). **Still to do:** activate FormSubmit (one test order on the live site, then Genelle clicks the activation email), optionally swap to her random alias. No online payment yet (Stripe still "coming soon").
 - [ ] **Policies not yet given**: cancellations/changes, holiday cut-offs, privacy policy, terms. Refund policy covers damaged/melted orders only.
 - [ ] **Newsletter**: removed (founder: "not right now"). Later she'd like to send seasonal launches + discounts/offers.
 - [ ] **Custom/corporate orders**: not offered "at this time" (she noted 3 weeks' notice for the future). No mention on the site.
