@@ -27,7 +27,7 @@
         <a href="#story">Our Story</a>
         <a href="#shop">Shop</a>
         <a href="#seasonal">Seasonal</a>
-        <a href="#order">Order</a>
+        <a href="#custom-order">Custom Orders</a>
         <a href="#ordering">Ordering &amp; Care</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -101,6 +101,18 @@
       </div>
     </section>
 
+    <!-- CUSTOM ORDER TEASER BAND -->
+    <section class="order-cta" aria-labelledby="ctaTitle">
+      <div class="container order-cta-inner">
+        <div>
+          <p class="eyebrow dark">Custom Orders</p>
+          <h2 id="ctaTitle">Dreaming up something <em>custom?</em></h2>
+          <p class="section-sub">Birthdays, weddings, baby showers, branded gifts: tell us your idea and we&rsquo;ll talk it through with you by email. Every custom piece is made to order. Please allow at least 3 weeks.</p>
+        </div>
+        <a href="#custom-order" class="btn btn-gold">Request a custom order</a>
+      </div>
+    </section>
+
     <!-- QUOTE BAND -->
     <section class="band">
       <div class="container">
@@ -131,15 +143,92 @@
       </div>
     </section>
 
-    <!-- ORDER NOW (opens the order form; also reachable from the bag's checkout button) -->
-    <section class="order-cta" id="order">
-      <div class="container order-cta-inner">
-        <div>
-          <p class="eyebrow dark">Place an Order</p>
-          <h2>Ready for something <em>sweet?</em></h2>
-          <p class="section-sub">Choose your treats, tell us how you&rsquo;d like to receive them and we&rsquo;ll email you to confirm your order and payment. No payment is taken on this site.</p>
+    <!-- CUSTOM ORDER REQUEST FORM: native multipart POST to FormSubmit (file uploads need it). See HANDOFF.md §4a. -->
+    <section class="custom-order section" id="custom-order" aria-labelledby="coTitle">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow dark">Custom Orders</p>
+          <h2 id="coTitle">Request a <em>custom</em> order</h2>
+          <p class="section-sub">Tell us what you&rsquo;re dreaming of and we&rsquo;ll be in touch by email to talk through the details, timing and price. No payment is taken on this site.</p>
         </div>
-        <button type="button" class="btn btn-gold" data-order-open>Order now</button>
+
+        <div class="co-card">
+          <p class="co-lead">Every custom piece is made to order. Please allow at least 3 weeks.</p>
+          <form class="co-form" id="customForm" action="https://formsubmit.co/zafechokola@gmail.com" method="POST" enctype="multipart/form-data" novalidate>
+            <!-- FormSubmit controls (_subject, _replyto and _next are filled in by js/main.js on submit) -->
+            <input type="hidden" name="_subject" value="New custom order request" />
+            <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_replyto" value="" />
+            <input type="hidden" name="_next" value="https://dupesdidit.github.io/zafe-chokola/thanks.html" />
+            <div class="of-honey" aria-hidden="true"><label for="coHoney">Leave this empty</label><input id="coHoney" name="_honey" type="text" tabindex="-1" autocomplete="off" /></div>
+
+            <fieldset class="of-group">
+              <legend>About you</legend>
+              <div class="of-row three">
+                <div class="of-field"><label for="coName">Name <span class="req" aria-hidden="true">*</span></label><input id="coName" name="name" type="text" autocomplete="name" required /></div>
+                <div class="of-field"><label for="coEmail">Email <span class="req" aria-hidden="true">*</span></label><input id="coEmail" name="email" type="email" autocomplete="email" required /></div>
+                <div class="of-field"><label for="coPhone">Phone <span class="opt">(optional)</span></label><input id="coPhone" name="phone" type="tel" autocomplete="tel" /></div>
+              </div>
+            </fieldset>
+
+            <fieldset class="of-group">
+              <legend>Your chocolates</legend>
+              <div class="of-row">
+                <div class="of-field"><label for="coOccasion">Occasion</label>
+                  <select id="coOccasion" name="occasion"><option value="">Choose&hellip;</option><option>Birthday</option><option>Wedding</option><option>Baby shower</option><option>Corporate/branded</option><option>Holiday</option><option>Other</option></select></div>
+                <div class="of-field"><label for="coType">Chocolate type</label>
+                  <select id="coType" name="chocolate_type"><option value="">Choose&hellip;</option><option>Milk</option><option>Dark</option><option>White</option><option>Mixed</option><option>Not sure</option></select></div>
+              </div>
+              <div class="of-row">
+                <div class="of-field"><label for="coShape">Shape</label>
+                  <select id="coShape" name="shape"><option value="">Choose&hellip;</option><option>Round</option><option>Square</option><option>Rectangle/bar</option><option>Heart</option><option value="Custom shape">Custom shape (describe)</option><option>Not sure</option></select></div>
+                <div class="of-field" id="shapeDescField" hidden><label for="coShapeDesc">Describe the shape <span class="req" aria-hidden="true">*</span></label><input id="coShapeDesc" name="shape_description" type="text" placeholder="e.g. a football, the number 30, a star" /></div>
+              </div>
+              <div class="of-row">
+                <div class="of-field"><label for="coSize">Size / approximate dimensions</label><input id="coSize" name="size" type="text" placeholder="e.g. bite-size, or about 4 in / 10 cm across" /></div>
+                <div class="of-field"><label for="coQty">Quantity</label><input id="coQty" name="quantity" type="number" min="1" max="10000" step="1" inputmode="numeric" placeholder="How many pieces?" /></div>
+              </div>
+              <div class="of-row">
+                <div class="of-field"><label for="coColours">Colours / theme</label><input id="coColours" name="colours_theme" type="text" placeholder="e.g. blush pink and gold, jungle theme" /></div>
+                <div class="of-field"><label for="coText">Personalisation text</label><input id="coText" name="personalisation" type="text" maxlength="120" placeholder="Names, initials or a short message" /></div>
+              </div>
+              <div class="of-field"><label for="coDesc">Tell us what you&rsquo;d like <span class="req" aria-hidden="true">*</span></label><textarea id="coDesc" name="description" rows="5" required placeholder="Describe your idea: flavours you love, the look you&rsquo;re going for, how it will be used&hellip;"></textarea></div>
+              <div class="of-field">
+                <span class="of-label" id="coFilesLabel">Logo or reference images <span class="opt">(optional: images or PDF, up to 5&nbsp;MB in total)</span></span>
+                <div class="co-files" role="group" aria-labelledby="coFilesLabel">
+                  <input id="coFile1" name="attachment" type="file" accept="image/*,.pdf,application/pdf" aria-label="Reference file 1" />
+                  <input id="coFile2" name="attachment_2" type="file" accept="image/*,.pdf,application/pdf" aria-label="Reference file 2" hidden />
+                  <input id="coFile3" name="attachment_3" type="file" accept="image/*,.pdf,application/pdf" aria-label="Reference file 3" hidden />
+                </div>
+                <button type="button" class="text-btn" id="addFile" hidden>+ Add another file</button>
+                <p class="of-msg" id="fileMsg" role="alert" hidden></p>
+              </div>
+            </fieldset>
+
+            <fieldset class="of-group">
+              <legend>Timing &amp; delivery</legend>
+              <div class="of-row">
+                <div class="of-field"><label for="coDate">Date needed <span class="req" aria-hidden="true">*</span></label><input id="coDate" name="date_needed" type="date" required aria-describedby="dateHelp" />
+                  <p class="of-help" id="dateHelp">At least 3 weeks from today, please.</p><p class="of-msg" id="dateMsg" role="alert" hidden></p></div>
+                <div class="of-field"><label for="coBudget">Budget range <span class="opt">(optional)</span></label>
+                  <select id="coBudget" name="budget"><option value="">Choose&hellip;</option><option>Under $50</option><option>$50&ndash;100</option><option>$100&ndash;250</option><option>$250+</option></select></div>
+              </div>
+              <p class="of-label" id="coDelivLabel">Delivery <span class="req" aria-hidden="true">*</span></p>
+              <div class="of-choices" role="radiogroup" aria-labelledby="coDelivLabel">
+                <label class="of-choice"><input type="radio" name="delivery" value="Ship to me" checked required /> <span>Ship to me</span></label>
+                <label class="of-choice"><input type="radio" name="delivery" value="Pick up at a market or event" /> <span>Pick up at a market or event</span></label>
+              </div>
+              <div class="of-field" id="coAddressField"><label for="coAddress">Shipping address <span class="req" aria-hidden="true">*</span></label><textarea id="coAddress" name="shipping_address" rows="3" autocomplete="street-address" required></textarea></div>
+              <p class="of-note">Orders ship with cold packs. Shipping pauses during the hottest months of the year, so the chocolate never has to brave the heat.</p>
+            </fieldset>
+
+            <div class="of-field"><label for="coHeard">How did you hear about us? <span class="opt">(optional)</span></label><input id="coHeard" name="heard_about_us" type="text" placeholder="Instagram, a market, a friend&hellip;" /></div>
+
+            <p class="of-error" id="coError" role="alert" hidden></p>
+            <button type="submit" class="btn btn-gold btn-block co-submit" id="coSubmit">Send my request</button>
+            <p class="of-fine">Fields marked <span class="req">*</span> are required. After you send, a quick &ldquo;I&rsquo;m not a robot&rdquo; check from our form service may appear before you return to our thank-you page. Prefer email? Write to <a class="inline-link" href="mailto:Zafechokola@gmail.com">Zafechokola@gmail.com</a>.</p>
+          </form>
+        </div>
       </div>
     </section>
 
@@ -161,7 +250,7 @@
           </div>
           <div class="info-card">
             <h3>Paying</h3>
-            <p>We accept Cash App, credit and debit cards (we&rsquo;ll email you a payment link) and cash at markets and events. No payment is taken on this site.</p>
+            <p>We accept credit and debit cards (secure online card checkout is coming soon) and Cash App.</p>
             <!-- TODO(owner): add the Cash App $cashtag here once confirmed — do not guess it. -->
           </div>
           <div class="info-card">
@@ -218,92 +307,21 @@
     <div class="cart-body" id="cartItems"></div>
     <div class="cart-foot">
       <div class="cart-row"><span>Subtotal</span><strong id="cartSubtotal">$0.00</strong></div>
-      <p class="cart-note">No payment is taken online. We&rsquo;ll email you to confirm your order, shipping and payment. Orders ship with cold packs.</p>
-      <button class="btn btn-gold btn-block" id="checkoutBtn">Continue to order</button>
+      <p class="cart-note">Shipping and taxes calculated at checkout. Orders ship with cold packs.</p>
+      <button class="btn btn-gold btn-block" id="checkoutBtn">Checkout</button>
       <button class="text-btn" id="clearCart">Clear bag</button>
     </div>
   </aside>
 
-  <!-- ORDER FORM MODAL: emails the order via FormSubmit (see HANDOFF.md "Order form"). No payment is taken. -->
-  <div class="modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="orderTitle" hidden>
-    <div class="modal-card order-card">
-      <button type="button" class="icon-btn modal-x" id="orderClose" aria-label="Close order form">&times;</button>
-
-      <form id="orderForm" class="order-form" novalidate>
-        <p class="eyebrow dark">Place an Order</p>
-        <h3 id="orderTitle">Your order</h3>
-        <p class="order-intro">Fill in your details and we&rsquo;ll email you to confirm your order and payment. No payment is taken on this site.</p>
-
-        <fieldset class="of-group">
-          <legend>Your treats</legend>
-          <div id="orderItems"></div>
-          <p class="of-error" id="itemsError" role="alert" hidden>Please choose at least one treat.</p>
-        </fieldset>
-
-        <fieldset class="of-group">
-          <legend>Your details</legend>
-          <div class="of-row">
-            <div class="of-field">
-              <label for="ofName">Full name <span class="req" aria-hidden="true">*</span></label>
-              <input id="ofName" name="name" type="text" autocomplete="name" required />
-            </div>
-            <div class="of-field">
-              <label for="ofEmail">Email <span class="req" aria-hidden="true">*</span></label>
-              <input id="ofEmail" name="email" type="email" autocomplete="email" required />
-            </div>
-          </div>
-          <div class="of-field">
-            <label for="ofPhone">Phone <span class="opt">(optional)</span></label>
-            <input id="ofPhone" name="phone" type="tel" autocomplete="tel" />
-          </div>
-        </fieldset>
-
-        <fieldset class="of-group">
-          <legend>Delivery <span class="req" aria-hidden="true">*</span></legend>
-          <div class="of-choices">
-            <label class="of-choice"><input type="radio" name="delivery" value="Ship to me" checked required /> <span>Ship to me</span></label>
-            <label class="of-choice"><input type="radio" name="delivery" value="Pick up at a market or event" /> <span>Pick up at a market or event</span></label>
-          </div>
-          <div class="of-field" id="addressField">
-            <label for="ofAddress">Shipping address <span class="req" aria-hidden="true">*</span></label>
-            <textarea id="ofAddress" name="shipping_address" rows="3" autocomplete="street-address" required></textarea>
-          </div>
-          <p class="of-note">Orders ship with cold packs. Shipping pauses during the hottest months of the year, so the chocolate never has to brave the heat.</p>
-        </fieldset>
-
-        <fieldset class="of-group">
-          <legend>Preferred payment <span class="req" aria-hidden="true">*</span></legend>
-          <div class="of-choices">
-            <label class="of-choice"><input type="radio" name="payment" value="Cash App" required /> <span>Cash App</span></label>
-            <label class="of-choice"><input type="radio" name="payment" value="Card (send me a payment link)" /> <span>Card <small>(we&rsquo;ll send a link)</small></span></label>
-            <label class="of-choice"><input type="radio" name="payment" value="Cash at a market" /> <span>Cash at a market</span></label>
-          </div>
-        </fieldset>
-
-        <div class="of-field">
-          <label for="ofNotes">Notes or occasion <span class="opt">(optional)</span></label>
-          <textarea id="ofNotes" name="notes" rows="3" placeholder="A birthday, a gift, a date you need it by&hellip;"></textarea>
-        </div>
-
-        <!-- Honeypot: real people never see or fill this; FormSubmit drops submissions where it's filled. -->
-        <div class="of-honey" aria-hidden="true">
-          <label for="ofHoney">Leave this empty</label>
-          <input id="ofHoney" name="_honey" type="text" tabindex="-1" autocomplete="off" />
-        </div>
-
-        <p class="of-error" id="formError" role="alert" hidden></p>
-        <button type="submit" class="btn btn-gold btn-block" id="orderSubmit">Send my order</button>
-        <p class="of-fine">By sending, you agree to be contacted by email about this order. Fields marked <span class="req">*</span> are required.</p>
-      </form>
-
-      <div class="order-success" id="orderSuccess" hidden tabindex="-1">
-        <span class="os-mark" aria-hidden="true">&#10022;</span>
-        <p class="eyebrow dark">Order received</p>
-        <h3>Thank you!</h3>
-        <p>Genelle will email you to confirm your order and payment.</p>
-        <div class="modal-summary" id="successSummary"></div>
-        <button type="button" class="btn btn-dark btn-block" id="successOk">Continue browsing</button>
-      </div>
+  <!-- CHECKOUT PLACEHOLDER MODAL -->
+  <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal-card">
+      <button class="icon-btn modal-x" id="modalClose" aria-label="Close">&times;</button>
+      <p class="eyebrow dark">Almost there</p>
+      <h3 id="modalTitle">Checkout coming soon</h3>
+      <p>Secure card payments will connect via <strong>Stripe</strong> soon. Your bag has been saved on this device, so nothing will be lost.</p>
+      <div class="modal-summary" id="modalSummary"></div>
+      <button class="btn btn-dark btn-block" id="modalOk">Continue browsing</button>
     </div>
   </div>
 

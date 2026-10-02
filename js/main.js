@@ -121,7 +121,7 @@
   }
 
   /* ---------- Drawer / modal ---------- */
-  var drawer = $("#cartDrawer"), backdrop = $("#cartBackdrop"), modal = $("#orderModal");
+  var drawer = $("#cartDrawer"), backdrop = $("#cartBackdrop"), modal = $("#checkoutModal");
   function openCart() {
     backdrop.hidden = false;
     requestAnimationFrame(function () { drawer.classList.add("open"); backdrop.classList.add("show"); });
@@ -134,136 +134,14 @@
     document.body.classList.remove("no-scroll");
     setTimeout(function () { if (!drawer.classList.contains("open")) backdrop.hidden = true; }, 300);
   }
-  /* ---------- Order form (emailed via FormSubmit; no payment taken) ---------- */
-  // Swap this for Genelle's random FormSubmit alias later (https://formsubmit.co/ajax/<alias>) to hide the address.
-  var ORDER_ENDPOINT = "https://formsubmit.co/ajax/zafechokola@gmail.com";
-  var ORDER_EMAIL = "Zafechokola@gmail.com";
-  var form = $("#orderForm"), success = $("#orderSuccess"), lastFocus = null;
-  var pick = {};          // quantities chosen in the form when the bag is empty
-  var useCart = false;    // true when the order comes from the bag
-
-  function orderLines() {
-    var src = useCart ? cart : pick;
-    return Object.keys(src).filter(function (id) { return byId[id] && src[id] > 0; }).map(function (id) {
-      var p = byId[id], q = src[id];
-      return { id: id, name: p.name, qty: q, price: p.price, total: p.price * q };
-    });
-  }
-  function orderTotal(lines) { return lines.reduce(function (a, l) { return a + l.total; }, 0); }
-  function summaryHTML(lines) {
-    return lines.map(function (l) {
-      return '<div><span>' + l.qty + " × " + esc(l.name) + ' <small>@ ' + money(l.price) + '</small></span><span>' + money(l.total) + "</span></div>";
-    }).join("") + '<div class="ms-total"><span>Subtotal</span><span>' + money(orderTotal(lines)) + "</span></div>";
-  }
-  function renderOrderItems() {
-    var box = $("#orderItems");
-    if (useCart) {
-      box.innerHTML = '<p class="of-hint">From your bag:</p><div class="modal-summary">' + summaryHTML(orderLines()) + '</div>' +
-        '<button type="button" class="text-btn" id="editBag">Edit bag</button>';
-      return;
-    }
-    box.innerHTML = '<p class="of-hint">Choose quantities:</p>' + PRODUCTS.map(function (p) {
-      var q = pick[p.id] || 0;
-      return '<div class="pick-row">' +
-        '<label for="pick-' + esc(p.id) + '"><span class="pick-name">' + esc(p.name) + '</span> <span class="pick-price">' + money(p.price) + (p.id === "kids-pops" ? " each" : "") + "</span></label>" +
-        '<div class="qty"><button type="button" data-pdec="' + esc(p.id) + '" aria-label="Fewer ' + esc(p.name) + '">&minus;</button>' +
-        '<input id="pick-' + esc(p.id) + '" type="number" min="0" max="99" inputmode="numeric" value="' + q + '" data-pick="' + esc(p.id) + '" />' +
-        '<button type="button" data-pinc="' + esc(p.id) + '" aria-label="More ' + esc(p.name) + '">+</button></div>' +
-        '<span class="pick-total" aria-live="polite">' + money(p.price * q) + "</span></div>";
-    }).join("") + '<div class="modal-summary pick-sum"><div class="ms-total"><span>Subtotal</span><span id="pickSubtotal">' + money(orderTotal(orderLines())) + "</span></div></div>";
-  }
-  function setPick(id, q) {
-    pick[id] = Math.max(0, Math.min(99, q | 0));
-    var input = $("#pick-" + id); if (input) input.value = pick[id];
-    var row = input && input.closest(".pick-row"); if (row) row.querySelector(".pick-total").textContent = money(byId[id].price * pick[id]);
-    $("#pickSubtotal").textContent = money(orderTotal(orderLines()));
-    if (orderLines().length) $("#itemsError").hidden = true;
-  }
-  function syncAddress() {
-    var ship = form.querySelector('input[name="delivery"]:checked');
-    var isShip = !!ship && ship.value === "Ship to me";
-    $("#addressField").hidden = !isShip;
-    $("#ofAddress").required = isShip;
-  }
   function openModal() {
-    lastFocus = document.activeElement;
-    useCart = count() > 0;
-    form.hidden = false; success.hidden = true;
-    $("#formError").hidden = true; $("#itemsError").hidden = true;
-    renderOrderItems(); syncAddress();
+    var ids = Object.keys(cart);
+    $("#modalSummary").innerHTML =
+      ids.map(function (id) { return "<div><span>" + cart[id] + " × " + esc(byId[id].name) + "</span><span>" + money(byId[id].price * cart[id]) + "</span></div>"; }).join("") +
+      '<div class="ms-total"><span>Subtotal</span><span>' + money(subtotal()) + "</span></div>";
     modal.hidden = false;
-    document.body.classList.add("no-scroll");
-    setTimeout(function () { $("#ofName").focus({ preventScroll: true }); }, 30);
   }
-  function closeModal() {
-    modal.hidden = true;
-    if (!drawer.classList.contains("open")) document.body.classList.remove("no-scroll");
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
-  }
-  function fieldVal(name) { var el = form.elements[name]; return el ? String(el.value || "").trim() : ""; }
-  function radioVal(name) { var el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ""; }
-  function mailtoFallback(lines) {
-    var body = "Hello! I'd like to order:\n" + lines.map(function (l) { return l.qty + " x " + l.name + " = " + money(l.total); }).join("\n") +
-      "\nSubtotal: " + money(orderTotal(lines)) + "\n\nName: " + fieldVal("name") + "\nDelivery: " + radioVal("delivery") +
-      (radioVal("delivery") === "Ship to me" ? "\nAddress: " + fieldVal("shipping_address") : "") + "\nPayment: " + radioVal("payment") +
-      (fieldVal("phone") ? "\nPhone: " + fieldVal("phone") : "") + (fieldVal("notes") ? "\nNotes: " + fieldVal("notes") : "");
-    return "mailto:" + ORDER_EMAIL + "?subject=" + encodeURIComponent("Zafe Chokola order from " + fieldVal("name")) + "&body=" + encodeURIComponent(body);
-  }
-  function showError(html) { var e = $("#formError"); e.innerHTML = html; e.hidden = false; e.scrollIntoView({ block: "nearest" }); }
-
-  form.addEventListener("change", function (e) {
-    if (e.target.name === "delivery") syncAddress();
-    if (e.target.dataset && e.target.dataset.pick) setPick(e.target.dataset.pick, parseInt(e.target.value, 10) || 0);
-  });
-  form.addEventListener("click", function (e) {
-    var t = e.target.closest("button"); if (!t) return;
-    if (t.dataset.pinc) setPick(t.dataset.pinc, (pick[t.dataset.pinc] || 0) + 1);
-    else if (t.dataset.pdec) setPick(t.dataset.pdec, (pick[t.dataset.pdec] || 0) - 1);
-    else if (t.id === "editBag") { closeModal(); openCart(); }
-  });
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    $("#formError").hidden = true;
-    var lines = orderLines();
-    $("#itemsError").hidden = lines.length > 0;
-    if (!form.checkValidity()) { form.reportValidity(); return; }
-    if (!lines.length) { $("#itemsError").scrollIntoView({ block: "nearest" }); return; }
-    var name = fieldVal("name"), email = fieldVal("email"), isShip = radioVal("delivery") === "Ship to me";
-    var payload = {
-      name: name,
-      email: email,
-      phone: fieldVal("phone") || "(not given)",
-      delivery: radioVal("delivery"),
-      shipping_address: isShip ? fieldVal("shipping_address") : "(pickup at a market or event)",
-      payment: radioVal("payment"),
-      order: lines.map(function (l) { return l.qty + " × " + l.name + " @ " + money(l.price) + " = " + money(l.total); }).join("\n"),
-      subtotal: money(orderTotal(lines)),
-      notes: fieldVal("notes") || "(none)",
-      _subject: "New Zafe Chokola order from " + name,
-      _template: "table",
-      _captcha: "false",
-      _replyto: email,
-      _honey: fieldVal("_honey")
-    };
-    var btn = $("#orderSubmit"); btn.disabled = true; btn.textContent = "Sending…";
-    fetch(ORDER_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify(payload)
-    }).then(function (res) {
-      return res.json().catch(function () { return {}; }).then(function (data) {
-        if (!res.ok || String(data.success) === "false") throw new Error(data.message || ("HTTP " + res.status));
-      });
-    }).then(function () {
-      $("#successSummary").innerHTML = summaryHTML(lines);
-      form.reset(); pick = {};
-      if (useCart) { cart = {}; save(); renderCart(); }
-      form.hidden = true; success.hidden = false; success.focus();
-    }).catch(function () {
-      showError("Sorry, we couldn&rsquo;t send your order just now. Please try again, or email it to us at " +
-        '<a class="inline-link" href="' + esc(mailtoFallback(lines)) + '">' + ORDER_EMAIL + "</a> and we&rsquo;ll take care of you.");
-    }).then(function () { btn.disabled = false; btn.textContent = "Send my order"; });
-  });
+  function closeModal() { modal.hidden = true; }
 
   var toastTimer;
   function toast(msg) {
@@ -294,12 +172,11 @@
   $("#clearCart").addEventListener("click", function () { cart = {}; save(); renderCart(); });
   $("#checkoutBtn").addEventListener("click", function () {
     if (!count()) return;
-    // FUTURE (needs owner approval): online card payment (Stripe) could replace the emailed order here.
-    closeCart(); openModal();
+    // FUTURE (needs owner approval): redirect to Stripe Payment Link / Checkout session using product.stripePaymentLink.
+    openModal();
   });
-  document.addEventListener("click", function (e) { if (e.target.closest("[data-order-open]")) { e.preventDefault(); openModal(); } });
-  $("#orderClose").addEventListener("click", closeModal);
-  $("#successOk").addEventListener("click", closeModal);
+  $("#modalClose").addEventListener("click", closeModal);
+  $("#modalOk").addEventListener("click", function () { closeModal(); closeCart(); });
   modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") { if (!modal.hidden) closeModal(); else closeCart(); }
@@ -319,6 +196,88 @@
   });
   var header = $(".site-header");
   window.addEventListener("scroll", function () { header.classList.toggle("scrolled", window.scrollY > 40); }, { passive: true });
+
+  /* ---------- Custom order request form (#custom-order) ----------
+   * Native multipart POST to FormSubmit (https://formsubmit.co/zafechokola@gmail.com) so file uploads work;
+   * FormSubmit's AJAX endpoint is JSON-only in its docs. This script only validates and fills the hidden
+   * _subject/_replyto/_next fields, then lets the browser submit. See HANDOFF.md §4a. */
+  var co = $("#customForm");
+  if (co) (function () {
+    var MIN_DAYS = 21, MAX_BYTES = 5 * 1024 * 1024;
+    var files = [$("#coFile1"), $("#coFile2"), $("#coFile3")];
+    var okType = function (f) { return /^image\//.test(f.type) || /\.pdf$/i.test(f.name) || f.type === "application/pdf" || /\.(heic|heif)$/i.test(f.name); };
+    function ymd(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+    function earliest() { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + MIN_DAYS); return d; }
+    var dateIn = $("#coDate"); dateIn.min = ymd(earliest());
+
+    function show(el, msg) { el.textContent = msg; el.hidden = !msg; }
+    function syncShip() {
+      var ship = (co.querySelector('input[name="delivery"]:checked') || {}).value === "Ship to me";
+      $("#coAddressField").hidden = !ship; $("#coAddress").required = ship;
+      if (!ship) $("#coAddress").removeAttribute("aria-invalid");
+    }
+    function syncShape() {
+      var custom = $("#coShape").value === "Custom shape";
+      $("#shapeDescField").hidden = !custom; $("#coShapeDesc").required = custom;
+    }
+    function checkDate() {
+      var v = dateIn.value, msg = "";
+      if (!v) msg = "Please choose the date you need your chocolates.";
+      else {
+        var p = v.split("-"), d = new Date(+p[0], +p[1] - 1, +p[2]);
+        if (d < earliest()) msg = "Custom orders need at least 3 weeks\u2019 notice, so the earliest date we can offer is " +
+          earliest().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" }) + ". For anything sooner, please email us and we\u2019ll see what we can do.";
+      }
+      show($("#dateMsg"), msg); dateIn.setAttribute("aria-invalid", msg ? "true" : "false"); dateIn.setCustomValidity(msg);
+      return !msg;
+    }
+    function checkFiles() {
+      var total = 0, msg = "";
+      files.forEach(function (inp) { Array.prototype.forEach.call(inp.files || [], function (f) {
+        total += f.size; if (!okType(f)) msg = "\u201c" + f.name + "\u201d isn\u2019t an image or PDF. Please choose a JPG, PNG, HEIC or PDF file.";
+      }); });
+      if (!msg && total > MAX_BYTES) msg = "Your files add up to " + (total / 1048576).toFixed(1) + " MB. Please keep the total under 5 MB (or email larger files to Zafechokola@gmail.com).";
+      show($("#fileMsg"), msg); files.forEach(function (i) { i.setCustomValidity(msg); });
+      // reveal the next empty slot once the previous one is used
+      var next = files.filter(function (i) { return i.hidden; })[0];
+      $("#addFile").hidden = !next || !files.some(function (i) { return !i.hidden && i.files && i.files.length; });
+      return !msg;
+    }
+    $("#addFile").addEventListener("click", function () {
+      var next = files.filter(function (i) { return i.hidden; })[0];
+      if (next) { next.hidden = false; next.focus(); } checkFiles();
+    });
+    co.addEventListener("change", function (e) {
+      if (e.target.name === "delivery") syncShip();
+      if (e.target.id === "coShape") syncShape();
+      if (e.target === dateIn) checkDate();
+      if (e.target.type === "file") checkFiles();
+      if (e.target.getAttribute("aria-invalid") === "true" && e.target.checkValidity()) e.target.setAttribute("aria-invalid", "false");
+      if (!$("#coError").hidden && !co.querySelector('[aria-invalid="true"]')) show($("#coError"), "");
+    });
+    co.addEventListener("submit", function (e) {
+      show($("#coError"), "");
+      var okDate = checkDate(), okFiles = checkFiles();
+      Array.prototype.forEach.call(co.querySelectorAll("input, select, textarea"), function (el) {
+        if (el.type !== "hidden" && el.willValidate) el.setAttribute("aria-invalid", el.checkValidity() ? "false" : "true");
+      });
+      if (!co.checkValidity() || !okDate || !okFiles) {
+        e.preventDefault();
+        show($("#coError"), "Please check the highlighted fields.");
+        var bad = co.querySelector('[aria-invalid="true"]'); if (bad) bad.focus();
+        return;
+      }
+      var name = co.elements.name.value.trim();
+      co.elements._subject.value = "New custom order request from " + name;
+      co.elements._replyto.value = co.elements.email.value.trim();
+      if (/^https?:$/.test(location.protocol)) co.elements._next.value = new URL("thanks.html", location.href).href;
+      if (!$("#coAddress").required) $("#coAddress").value = "";
+      $("#coSubmit").disabled = true; $("#coSubmit").textContent = "Sending\u2026";
+      // let the browser submit natively (multipart/form-data, includes files)
+    });
+    window.addEventListener("pageshow", function () { $("#coSubmit").disabled = false; $("#coSubmit").textContent = "Send my request"; });
+    syncShip(); syncShape();
+  })();
 
   renderProducts();
   renderCart();
