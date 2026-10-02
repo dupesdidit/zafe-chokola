@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zafe Chokola — Hand-Crafted Fine Chocolate</title>
+  <meta name="description" content="Zafe Chokola: small-batch bonbons, bars and gift boxes made by hand." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <div class="announce">Complimentary local pickup every Friday &middot; Insulated shipping on orders over $75</div>
+
+  <header class="site-header" id="top">
+    <div class="container nav">
+      <a href="#top" class="logo" aria-label="Zafe Chokola home">
+        <span class="logo-mark">ZC</span>
+        <span class="logo-text">Zafe Chokola</span>
+      </a>
+      <nav class="nav-links" id="navLinks" aria-label="Primary">
+        <a href="#story">Our Story</a>
+        <a href="#collections">Collections</a>
+        <a href="#gifts">Gift Boxes</a>
+        <a href="#reviews">Kind Words</a>
+        <a href="#visit">Visit</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="cart-btn" id="cartOpen" aria-label="Open cart">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8Zm3 0V6a4 4 0 0 1 8 0v2"/></svg>
+          <span>Bag</span>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        <p class="eyebrow">Small-batch chocolatier &middot; Est. 2026</p>
+        <h1>Where cacao<br /><em>becomes craft.</em></h1>
+        <p class="hero-sub">Bonbons painted by hand, bars ground from single-estate beans, and gift boxes made to be remembered.</p>
+        <div class="hero-ctas">
+          <a href="#collections" class="btn btn-gold">Shop the Collection</a>
+          <a href="#gifts" class="btn btn-ghost">Explore Gift Boxes</a>
+        </div>
+      </div>
+      <a href="#story" class="scroll-cue" aria-label="Scroll down">Scroll</a>
+    </section>
+
+    <!-- STORY -->
+    <section class="story section" id="story">
+      <div class="container story-grid">
+        <div class="story-media">
+          <img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=1000&q=80&auto=format&fit=crop" alt="Assorted handmade chocolate truffles" loading="lazy" />
+          <div class="story-stamp"><span>Made<br/>by hand</span></div>
+        </div>
+        <div class="story-copy">
+          <p class="eyebrow dark">Our Story</p>
+          <h2>A small atelier with a <em>patient</em> philosophy.</h2>
+          <p>Zafe Chokola began at a kitchen table with a marble slab, a thermometer and an obsession with getting the snap just right. Today we still temper every batch by hand, sourcing cacao from growers we know by name.</p>
+          <p>Each season our chocolatiers develop a handful of new flavours — inspired by markets, travels and the spice drawer — and paint every shell before it is filled, sealed and boxed.</p>
+          <a href="#collections" class="link-arrow">Taste the collection &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUES -->
+    <section class="values">
+      <div class="container values-grid">
+        <div class="value"><span class="v-icon">&#10022;</span><h3>Hand-tempered</h3><p>Every batch, every day.</p></div>
+        <div class="value"><span class="v-icon">&#10048;</span><h3>Ethically sourced</h3><p>Direct-trade cacao.</p></div>
+        <div class="value"><span class="v-icon">&#10086;</span><h3>Small batch</h3><p>Made in limited runs.</p></div>
+        <div class="value"><span class="v-icon">&#9672;</span><h3>Natural colour</h3><p>Plant-based pigments.</p></div>
+      </div>
+    </section>
+
+    <!-- COLLECTIONS -->
+    <section class="collections section" id="collections">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow dark">The Collection</p>
+          <h2>Bonbons &amp; bars</h2>
+          <p class="section-sub">Made fresh each week. Best enjoyed within three weeks of purchase.</p>
+        </div>
+        <div class="product-grid" id="collectionGrid"></div>
+      </div>
+    </section>
+
+    <!-- QUOTE BAND -->
+    <section class="band">
+      <div class="container">
+        <p class="band-quote">&ldquo;Chocolate should be eaten slowly — the way it was made.&rdquo;</p>
+        <p class="band-cite">— Head Chocolatier (placeholder)</p>
+      </div>
+    </section>
+
+    <!-- GIFTS -->
+    <section class="gifts section" id="gifts">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Gift Boxes</p>
+          <h2>Made to be given</h2>
+          <p class="section-sub light">Every box is wrapped by hand and can include a personal note at checkout.</p>
+        </div>
+        <div class="gift-grid" id="giftGrid"></div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="reviews section" id="reviews">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow dark">Kind Words</p>
+          <h2>From our customers</h2>
+        </div>
+        <div class="review-grid">
+          <figure class="review">
+            <div class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <blockquote>&ldquo;Almost too beautiful to eat. Almost. The passion fruit bonbon is unreal.&rdquo;</blockquote>
+            <figcaption>— Placeholder Reviewer A.</figcaption>
+          </figure>
+          <figure class="review">
+            <div class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <blockquote>&ldquo;Ordered the Atelier Box for my mother’s birthday. She called me twice to talk about it.&rdquo;</blockquote>
+            <figcaption>— Placeholder Reviewer B.</figcaption>
+          </figure>
+          <figure class="review">
+            <div class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <blockquote>&ldquo;The 72% bar has ruined supermarket chocolate for me forever.&rdquo;</blockquote>
+            <figcaption>— Placeholder Reviewer C.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter">
+      <div class="container newsletter-inner">
+        <div>
+          <p class="eyebrow">The Chokola Letter</p>
+          <h2>First taste of new flavours</h2>
+          <p>Seasonal launches, pickup reminders and the occasional recipe. No more than twice a month.</p>
+        </div>
+        <form class="news-form" id="newsForm" novalidate>
+          <label for="email" class="sr-only">Email address</label>
+          <input type="email" id="email" placeholder="Your email address" required />
+          <button type="submit" class="btn btn-gold">Subscribe</button>
+          <p class="form-note" id="newsNote" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER / VISIT -->
+  <footer class="site-footer" id="visit">
+    <div class="container footer-grid">
+      <div>
+        <a href="#top" class="logo light"><span class="logo-mark">ZC</span><span class="logo-text">Zafe Chokola</span></a>
+        <p class="foot-tag">Hand-crafted fine chocolate.<br />First draft &mdash; details are placeholders.</p>
+      </div>
+      <div>
+        <h4>Visit the Atelier</h4>
+        <p>123 Placeholder Street<br />Your City, ST 00000</p>
+        <a href="#" class="link-arrow light">Get directions &rarr;</a>
+      </div>
+      <div>
+        <h4>Pickup Hours</h4>
+        <p>Friday &nbsp;2 – 6 pm<br />Saturday &nbsp;10 am – 2 pm</p>
+      </div>
+      <div>
+        <h4>Say Hello</h4>
+        <p><a href="mailto:hello@example.com">hello@example.com</a><br />(555) 010-0000</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram">IG</a><a href="#" aria-label="Facebook">FB</a><a href="#" aria-label="Pinterest">PI</a>
+        </div>
+      </div>
+    </div>
+    <div class="container foot-bottom">
+      <span>&copy; 2026 Zafe Chokola. All rights reserved.</span>
+      <span>Photography via Unsplash</span>
+    </div>
+  </footer>
+
+  <!-- CART DRAWER -->
+  <div class="cart-backdrop" id="cartBackdrop" hidden></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping bag" aria-hidden="true">
+    <div class="cart-head">
+      <h3>Your Bag</h3>
+      <button class="icon-btn" id="cartClose" aria-label="Close cart">&times;</button>
+    </div>
+    <div class="cart-body" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="cart-row"><span>Subtotal</span><strong id="cartSubtotal">$0.00</strong></div>
+      <p class="cart-note">Taxes and shipping calculated at checkout.</p>
+      <button class="btn btn-gold btn-block" id="checkoutBtn">Checkout</button>
+      <button class="text-btn" id="clearCart">Clear bag</button>
+    </div>
+  </aside>
+
+  <!-- CHECKOUT PLACEHOLDER MODAL -->
+  <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal-card">
+      <button class="icon-btn modal-x" id="modalClose" aria-label="Close">&times;</button>
+      <p class="eyebrow dark">Almost there</p>
+      <h3 id="modalTitle">Checkout coming soon</h3>
+      <p>Online payments will connect via <strong>Stripe</strong> shortly. Your bag has been saved on this device, so nothing will be lost.</p>
+      <div class="modal-summary" id="modalSummary"></div>
+      <button class="btn btn-dark btn-block" id="modalOk">Continue browsing</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
