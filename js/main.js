@@ -1,7 +1,7 @@
 /* Zafe Chokola — UI + client-side cart (localStorage). No real payments. */
 (function () {
   "use strict";
-  var PRODUCTS = window.MC_PRODUCTS || [];
+  var PRODUCTS = window.ZC_PRODUCTS || [];
   var STORAGE_KEY = "zafeChokola.cart.v1";
   var byId = {};
   PRODUCTS.forEach(function (p) { byId[p.id] = p; });

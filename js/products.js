@@ -8,7 +8,7 @@
  *  - stripePaymentLink: paste a Stripe Payment Link URL here later (e.g. "https://buy.stripe.com/...").
  *                       Not used yet — checkout is a placeholder.
  */
-window.MC_PRODUCTS = [
+window.ZC_PRODUCTS = [
   {
     id: "signature-bonbons-9",
     category: "collection",
