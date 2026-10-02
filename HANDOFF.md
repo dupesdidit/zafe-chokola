@@ -1,6 +1,6 @@
 # Zafe Chokola Website — Handoff Guide
 
-_Last updated: Friday, Oct 2, 2026, ~4:55 AM ET (founder's photos graded and added; committed locally, not pushed). Audience: AI agents and developers picking up this project._
+_Last updated: Friday, Oct 2, 2026, ~6:05 AM ET (retypeset to a luxe serif look per Sherwinn; committed locally, not pushed). Audience: AI agents and developers picking up this project._
 
 ---
 
@@ -8,9 +8,9 @@ _Last updated: Friday, Oct 2, 2026, ~4:55 AM ET (founder's photos graded and add
 
 | | |
 |---|---|
-| **Brand** | Zafe Chokola: playful chocolate treats with Caribbean (St. Lucian) roots; "chocolate made to evoke a joyful memory" |
+| **Brand** | Zafe Chokola: luxe-feeling chocolate treats with Caribbean (St. Lucian) roots; "chocolate made to evoke a joyful memory" |
 | **Owner** | Sherwinn (site owner/approver). Content comes from the founder's questionnaire (`/workspace/shared/zafe-chokola/genelle-answers.md`, submitted 10/1/26 10:45 PM ET). On the site she is credited only as **"Founder & Chocolatier"**: no personal name, no personal photo (her request). |
-| **Status** | Customised from the founder's questionnaire (Oct 1, 2026; that commit `6f7e2bc` is on `origin/main`). Oct 2, 2026: the founder's own photos (graded) are now in the hero, story and seasonal tiles. Those commits are **local only, NOT pushed** until Sherwinn approves. Product cards still use stock; see §9. |
+| **Status** | Customised from the founder's questionnaire (Oct 1) and her own graded photos in the hero, story and seasonal tiles (Oct 2). Both are on `origin/main` (up to `425db95`). Oct 2, ~6 AM ET: **retypeset to a refined luxe look** (Cormorant Garamond + Jost) per Sherwinn. That commit is **local only, NOT pushed** until he approves. Product cards still use stock; see §9. |
 | **Domain** | Founder owns **Thechocolateaffair.net**. **Not connected yet** (no `CNAME` file, no DNS changes). Connecting it needs approval; see §10.3. |
 | **Stack** | Plain HTML + CSS + vanilla JS. **No build step, no framework, no dependencies.** |
 | **Design reference** | Inspired by the *feel* of https://sanaachocolates.com/ — **not copied**. No text, images, logo, or brand assets from that site are used, and none may be added (see §11). |
@@ -18,16 +18,17 @@ _Last updated: Friday, Oct 2, 2026, ~4:55 AM ET (founder's photos graded and add
 ### Design traits borrowed (in spirit only) from the reference
 - Thin dark announcement bar on top → large hero → short brand story → row of value "badges" → footer.
 - Warm palette (gold / copper-brown / near-black / cream). The founder loves the colours "as they are", so they were kept.
-- Tone (founder's picks): **playful + modern**, lettering "bold and playful". Rounded display headings, pill buttons, larger radii, slight tilts on badges/tiles; still readable.
+- Tone: **refined luxe with a light touch of warmth** (Sherwinn, Oct 2, 2026: "the site should look and feel luxe to sell"). This replaced the founder's earlier "playful + modern / bold and playful" pick (Fredoka, pills, tilts, dashed accents, Oct 1). The copy keeps its warm, playful voice; the *visual* language is now high-contrast serif headings, tracked uppercase sans labels, 2px radii, thin gold hairlines (`--hair`), no tilts or dashed borders, and more whitespace.
+- Before/after: `/workspace/shared/zafe-chokola/retypeset/compare-hero-fonts.jpg` (plus `hero-/desktop-/mobile-before|after.png` there).
 
 ### Our own palette (CSS variables at the top of `css/styles.css`)
 | Variable | Hex | Use |
 |---|---|---|
 | `--cocoa-900` | `#1e1410` | announcement bar, seasonal section, footer |
-| `--cocoa-800` | `#2a1c16` | dark buttons, logo mark, season tiles, icon circles |
+| `--cocoa-800` | `#2a1c16` | dark buttons, season tiles, stamp |
 | `--cocoa-700` | `#3b2820` | spare dark tone |
-| `--copper` | `#a0602f` | accents, eyebrows, `<em>` highlight, quote band |
-| `--gold` | `#c9a15a` | primary buttons, borders, badges |
+| `--copper` | `#a0602f` | accents, eyebrows, italic `<em>`, quote band |
+| `--gold` | `#c9a15a` | primary buttons, thin gold rules (`--hair`), monogram ring |
 | `--gold-light` | `#e2c588` | hover, text on dark |
 | `--cream` | `#f8f1e6` | values row, allergen card, cart footer |
 | `--ivory` | `#fdfaf4` | page background |
@@ -35,15 +36,16 @@ _Last updated: Friday, Oct 2, 2026, ~4:55 AM ET (founder's photos graded and add
 | `--muted` | `#776a62` | secondary text |
 
 ### Fonts (Google Fonts, loaded in `index.html` `<head>`)
-- **Fredoka** (500/600/700): bold, rounded, playful display font for headings, prices, buttons, nav, wordmark (`--display`; `--serif` is kept as an alias pointing to it)
-- **Jost** (400/500): body text (`--sans`)
-(Changed Oct 1, 2026 from Cormorant Garamond per the founder's "bold and playful" pick. Fredoka has no italics, so `<em>` is upright copper with a gold highlighter stripe in `h2`.)
+- **Cormorant Garamond** (400/500/600, italic 400/500): high-contrast serif for headings, wordmark, prices, quote band, signature, stamp (`--serif`; `--display` is an alias pointing to it). Italic `<em>` in copper (gold-light on the hero) is the accent.
+- **Jost** (300/400): body text at 400; nav, buttons, eyebrows, badges, footer headings and labels in **uppercase with 0.22–0.34em letter-spacing** (`--sans`).
+- **Wordmark**: thin gold double-ring "ZC" serif monogram, then a thin gold vertical rule, then "ZAFE CHOKOLA" in tracked uppercase Cormorant (`.logo-mark`, `.logo-text`). The logo slot is unchanged (`images/logo/`, still empty).
+(History: Cormorant + Jost in the first draft → Fredoka on Oct 1 for the founder's "bold and playful" pick → back to Cormorant + Jost, refined further, on Oct 2 per Sherwinn. Bodoni Moda and Playfair Display were the alternatives; Cormorant was chosen for its elegant italics and its fit with the gold/cocoa palette.)
 
 ### Page sections (in order, all in `index.html`)
 1. **Announcement bar**: "Now shipping with cold packs · Catch us at farmers' markets & events"
 2. **Sticky header**: "ZC" monogram (logo slot) + "Zafe Chokola" wordmark, nav (Our Story, Shop, Seasonal, Ordering & Care, Contact), **Bag** button with item count, hamburger on ≤860px
 3. **Hero** (`.hero`): "Chocolate made for joyful memories." + two CTAs; background photo slot `images/hero.jpg` (founder's Valentine's heart) set in CSS
-4. **Our Story** (`#story`): photo slot `images/story.jpg` (founder's Easter eggs) with dashed gold frame + "Made with joy" stamp, founder's story, signed "Founder & Chocolatier"
+4. **Our Story** (`#story`): photo slot `images/story.jpg` (founder's Easter eggs) with thin gold offset frame + "Made with joy" italic stamp, founder's story, signed "Founder & Chocolatier"
 5. **Values** (`.values`): Made with joy · Milk chocolate (signature) · Seasonal fun · Cold-packed
 6. **Shop** (`#shop`, grid `#collectionGrid`): product cards rendered from `js/products.js` (`category: "collection"`), 3 columns on desktop
 7. **Quote band** (`.band`): founder's mission line
@@ -207,7 +209,7 @@ If committing as an agent, a working identity is: `git -c user.name=dupesdidit -
 
 _Updated Oct 1, 2026 after applying the founder's questionnaire._
 
-**Done (real content now):** story + name meaning, mission line (quote band), "Founder & Chocolatier" credit, products + prices, allergen notice, shipping/markets ordering info, payment methods, contact email, Instagram, damaged/melted refund policy, freshness (up to 6 months), seasonal collections, gift-cards-coming-soon note, playful heading font. **Removed:** street address + "Get directions", pickup hours, phone, Facebook/Pinterest, testimonials, press, newsletter, gift boxes, custom-order promise, "Est. 2026", invented values (ethically sourced, natural colour, etc.).
+**Done (real content now):** story + name meaning, mission line (quote band), "Founder & Chocolatier" credit, products + prices, allergen notice, shipping/markets ordering info, payment methods, contact email, Instagram, damaged/melted refund policy, freshness (up to 6 months), seasonal collections, gift-cards-coming-soon note, luxe typography (Oct 2). **Removed:** street address + "Get directions", pickup hours, phone, Facebook/Pinterest, testimonials, press, newsletter, gift boxes, custom-order promise, "Est. 2026", invented values (ethically sourced, natural colour, etc.).
 
 Still open:
 - [x] **Photos (partly done, Oct 2)**: hero, story, Valentine's/Easter/Halloween tiles now use the founder's graded photos.
