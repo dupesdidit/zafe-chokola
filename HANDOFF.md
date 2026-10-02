@@ -1,6 +1,6 @@
 # Zafe Chokola Website — Handoff Guide
 
-_Last updated: Thursday, Oct 1, 2026, ~11:30 PM ET (founder questionnaire applied; committed locally, not pushed). Audience: AI agents and developers picking up this project._
+_Last updated: Friday, Oct 2, 2026, ~4:55 AM ET (founder's photos graded and added; committed locally, not pushed). Audience: AI agents and developers picking up this project._
 
 ---
 
@@ -10,7 +10,7 @@ _Last updated: Thursday, Oct 1, 2026, ~11:30 PM ET (founder questionnaire applie
 |---|---|
 | **Brand** | Zafe Chokola: playful chocolate treats with Caribbean (St. Lucian) roots; "chocolate made to evoke a joyful memory" |
 | **Owner** | Sherwinn (site owner/approver). Content comes from the founder's questionnaire (`/workspace/shared/zafe-chokola/genelle-answers.md`, submitted 10/1/26 10:45 PM ET). On the site she is credited only as **"Founder & Chocolatier"**: no personal name, no personal photo (her request). |
-| **Status** | Customised from the founder's questionnaire (Oct 1, 2026): real story, products, prices, contact, policies. **Committed locally, NOT pushed yet** (the live site still shows the first draft until Sherwinn approves). Photos are still stock placeholders; see §9. |
+| **Status** | Customised from the founder's questionnaire (Oct 1, 2026; that commit `6f7e2bc` is on `origin/main`). Oct 2, 2026: the founder's own photos (graded) are now in the hero, story and seasonal tiles. Those commits are **local only, NOT pushed** until Sherwinn approves. Product cards still use stock; see §9. |
 | **Domain** | Founder owns **Thechocolateaffair.net**. **Not connected yet** (no `CNAME` file, no DNS changes). Connecting it needs approval; see §10.3. |
 | **Stack** | Plain HTML + CSS + vanilla JS. **No build step, no framework, no dependencies.** |
 | **Design reference** | Inspired by the *feel* of https://sanaachocolates.com/ — **not copied**. No text, images, logo, or brand assets from that site are used, and none may be added (see §11). |
@@ -42,12 +42,12 @@ _Last updated: Thursday, Oct 1, 2026, ~11:30 PM ET (founder questionnaire applie
 ### Page sections (in order, all in `index.html`)
 1. **Announcement bar**: "Now shipping with cold packs · Catch us at farmers' markets & events"
 2. **Sticky header**: "ZC" monogram (logo slot) + "Zafe Chokola" wordmark, nav (Our Story, Shop, Seasonal, Ordering & Care, Contact), **Bag** button with item count, hamburger on ≤860px
-3. **Hero** (`.hero`): "Chocolate made for joyful memories." + two CTAs; background photo slot `images/hero.jpg` set in CSS
-4. **Our Story** (`#story`): photo slot `images/story.jpg` with dashed gold frame + "Made with joy" stamp, founder's story, signed "Founder & Chocolatier"
+3. **Hero** (`.hero`): "Chocolate made for joyful memories." + two CTAs; background photo slot `images/hero.jpg` (founder's Valentine's heart) set in CSS
+4. **Our Story** (`#story`): photo slot `images/story.jpg` (founder's Easter eggs) with dashed gold frame + "Made with joy" stamp, founder's story, signed "Founder & Chocolatier"
 5. **Values** (`.values`): Made with joy · Milk chocolate (signature) · Seasonal fun · Cold-packed
 6. **Shop** (`#shop`, grid `#collectionGrid`): product cards rendered from `js/products.js` (`category: "collection"`), 3 columns on desktop
 7. **Quote band** (`.band`): founder's mission line
-8. **Seasonal Collections** (`#seasonal`, dark): Valentine's, Easter, Halloween, Birthdays tiles (no products/prices yet) + "Gift cards: coming soon" note
+8. **Seasonal Collections** (`#seasonal`, dark): Valentine's, Easter, Halloween tiles with the founder's photos (`images/seasonal/*.jpg`, `.season.has-photo`); Birthdays tile is icon-only (no photo yet); no products/prices yet + "Gift cards: coming soon" note
 9. **Ordering & Care** (`#ordering`): Shipping, Markets & events, Paying (cards coming soon + Cash App), Freshness & storage, Damaged or melted, **Allergen notice** (`#allergens`)
 10. **Footer** (`#contact`): tagline, Find Us (shipping / markets & events), Say Hello (email + Instagram), Coming Soon (gift cards, online checkout)
 11. *(Removed Oct 1, 2026: Gift Boxes, Kind Words/testimonials, Newsletter, address, pickup hours, phone, FB/Pinterest. See §9.)*
@@ -81,7 +81,8 @@ chocolate-site/
 ├── css/styles.css      # All styles. Palette/fonts as CSS variables at top; responsive rules at bottom
 ├── js/products.js      # THE product catalogue (single source of truth) → window.ZC_PRODUCTS
 ├── js/main.js          # Renders product cards, image fallback, cart logic + localStorage, drawer/modal, mobile nav
-├── images/             # Photo slots (stock placeholders now): hero.jpg, story.jpg, products/*.jpg, logo/ (empty). See images/README.md
+├── images/             # Photo slots: hero.jpg, story.jpg, seasonal/*.jpg (founder photos, graded); products/*.jpg (stock); logo/ (empty); stock-backup/ (original stock). See images/README.md
+├── tools/grade_photos.py # Colour-grades founder photos into the slots + writes before/after comparisons
 ├── tools/screenshot.py # Playwright: screenshots + cart smoke test (local file or any URL)
 ├── README.md           # Short readme
 ├── HANDOFF.md          # This document
@@ -117,7 +118,7 @@ Script load order matters: `products.js` **must** load before `main.js` (both at
 | `detail` | string | Small uppercase line (e.g. "9 pieces · hand-painted shells") |
 | `description` | string | 1–2 sentence blurb |
 | `price` | number | USD, e.g. `32` (formatted as `$32.00`) |
-| `image` | string (relative path) | Local photo slot, e.g. `images/products/spooky-bars.jpg` (currently holds a stock photo) |
+| `image` | string (relative path) | Local photo slot, e.g. `images/products/spooky-bars.jpg` (all 3 product slots still hold stock photos) |
 | `fallback` | string (URL) | Optional. Stock (Unsplash) URL used automatically if the local `image` file is missing (handled in `main.js` via `data-fallback`) |
 | `badge` | string | Optional corner label ("Bestseller"); `""` for none |
 | `stripePaymentLink` | string | **Empty for now.** Future Stripe Payment Link URL (`https://buy.stripe.com/...`). Not read by any code yet. |
@@ -135,12 +136,16 @@ Current products (real, from the founder's questionnaire): **Spooky Bars $8.00**
   |---|---|---|
   | `images/hero.jpg` | hero background (`.hero` in `css/styles.css`, fallback Unsplash URL is the 2nd `url()`) | 1800×1100, ≤300 KB, subject centre/right |
   | `images/story.jpg` | Our Story `<img>` (`data-fallback` attribute) | 1000×1250 (4:5), ≤250 KB |
+  | `images/seasonal/valentines.jpg`, `easter.jpg`, `halloween.jpg` (`birthdays.jpg` empty) | Seasonal tiles (`.season.has-photo`); no fallback | 800×600 (4:3) |
   | `images/products/spooky-bars.jpg` | Spooky Bars card + bag thumbnail | 900×900 square, ≤200 KB |
   | `images/products/pumpkin-bites.jpg` | Pumpkin Bites card + bag thumbnail | 900×900 square, ≤200 KB |
   | `images/products/kids-pops.jpg` | Kids Pops card + bag thumbnail | 900×900 square, ≤200 KB |
   | `images/logo/logo.svg` (**empty slot**) | header + footer logo; currently the "ZC" text monogram (`.logo-mark`, see `<!-- LOGO SLOT -->` in `index.html`) | SVG preferred, else transparent PNG ≥512 px |
   | `images/logo/favicon.png` (**empty slot**) | browser tab icon; currently an inline "ZC" SVG data-URI `<link rel="icon">` | 512×512 |
-  - All slots currently hold compressed Unsplash stock photos (Unsplash License). The founder says she has "lots" of photos and will send her logo file.
+  - **Oct 2, 2026:** hero, story and the Valentine's/Easter/Halloween tiles use the **founder's own photos**, colour-graded by `tools/grade_photos.py` to match the original moody stock look. Ungraded originals: `/workspace/shared/zafe-chokola/genelle-uploads/originals/` (downloaded from her Google Drive folder `1N4uGY6eqagYkc7AL1KAqKV6tumnwbhel`, not in the repo). Before/after comparisons + contact sheet are in `/workspace/shared/zafe-chokola/genelle-uploads/`.
+  - The 3 **product** slots still hold Unsplash stock: none of her uploads clearly shows Spooky Bars, Pumpkin Bites or Kids Pops.
+  - **Stock backup:** the original stock hero/story/product images are committed in `images/stock-backup/`. Switch back with e.g. `cp images/stock-backup/hero.jpg images/hero.jpg` (details in `images/README.md`). Don't delete it.
+  - New/replacement founder photo: put the original in the originals folder, set the slot in `SLOTS` in `tools/grade_photos.py`, run `python3 tools/grade_photos.py`, then check the comparisons.
   - Fallback: if a slot file is missing, `main.js` swaps product/story images to the `fallback`/`data-fallback` Unsplash URL; the hero CSS shows the Unsplash layer underneath.
   - When the logo arrives: replace `<span class="logo-mark">ZC</span>` (header + footer) with `<img src="images/logo/logo.svg" alt="Zafe Chokola" class="logo-img">`, add a height rule, and point the favicon `<link>` at `images/logo/favicon.png`.
 - **Colours / fonts** → CSS variables at the top of `css/styles.css`; swap the Google Fonts `<link>` in `index.html` if fonts change.
@@ -205,8 +210,11 @@ _Updated Oct 1, 2026 after applying the founder's questionnaire._
 **Done (real content now):** story + name meaning, mission line (quote band), "Founder & Chocolatier" credit, products + prices, allergen notice, shipping/markets ordering info, payment methods, contact email, Instagram, damaged/melted refund policy, freshness (up to 6 months), seasonal collections, gift-cards-coming-soon note, playful heading font. **Removed:** street address + "Get directions", pickup hours, phone, Facebook/Pinterest, testimonials, press, newsletter, gift boxes, custom-order promise, "Est. 2026", invented values (ethically sourced, natural colour, etc.).
 
 Still open:
-- [ ] **Photos**: every slot in `images/` is an Unsplash stock placeholder (hero, story, 3 products). Founder has "lots" of photos to send; drop them into the slots (see §5).
-- [ ] **Logo**: founder said she'll send her logo file. None received (no upload link in the questionnaire). "ZC" text monogram + inline SVG favicon until then.
+- [x] **Photos (partly done, Oct 2)**: hero, story, Valentine's/Easter/Halloween tiles now use the founder's graded photos.
+- [ ] **Product photos**: Spooky Bars, Pumpkin Bites and Kids Pops still use stock. Her uploads show Easter eggs, an Easter bunny, a Valentine's heart set, skull bonbons and football-helmet chocolates, none clearly matching these products. Ask her for photos of each (or confirm whether the skull box *is* the Spooky Bars).
+- [ ] **Birthdays tile photo** (`images/seasonal/birthdays.jpg`): none yet.
+- [ ] **Unused upload**: `4ED1F9B3-….jpg` (chocolate football helmets, held in a gloved hand) has no slot yet; ask what it is / where she'd like it.
+- [ ] **Logo**: founder said she'll send her logo file. Still not received: `IMG_6470.PNG` in her Drive upload is a photo of skull chocolates (actually a JPEG), **not a logo**. "ZC" text monogram + inline SVG favicon until then.
 - [ ] **Cash App $cashtag**: Cash App is listed as accepted, but no cashtag was given. Marked `<!-- TODO(owner) -->` in the "Paying" card in `index.html`. Don't guess it.
 - [ ] **Product details**: sizes/piece counts, what's inside and ingredients aren't provided; descriptions stay generic. Confirm whether Spooky Bars ($8) and Pumpkin Bites ($20) are per bar/box and their sizes. Kids Pops are "$3.00 a piece" (shown as "Priced per pop").
 - [ ] **Seasonal collections**: tiles only (Valentine's, Easter, Halloween, Birthdays); no products, timing or prices yet.
@@ -225,7 +233,7 @@ Still open:
 
 ## 10. Roadmap to going official
 
-1. **Content**: real photos into the `images/` slots, logo (SVG) + favicon + `apple-touch-icon` + Open Graph image/tags, product sizes, Cash App cashtag (see §9).
+1. **Content**: product photos into the `images/products/` slots, logo (SVG) + favicon + `apple-touch-icon` + Open Graph image/tags, product sizes, Cash App cashtag (see §9).
 2. **Payments (Stripe)**: pick one approach:
    - **Stripe Payment Links** (no code, simplest): one link per product, stored in `stripePaymentLink`. Each link buys **one product**, so it doesn't fit a mixed cart. Options: replace "Add to bag" with "Buy now" buttons, or accept single-item checkout.
    - **Stripe Checkout for the whole cart** (recommended): needs a tiny server-side function (Netlify/Vercel/Cloudflare Function) that takes `[{id, qty}]`, looks up **server-side prices** (Stripe Price IDs, e.g. a `stripePriceId` field), creates a Checkout Session, and returns its URL. Front-end change: in the `#checkoutBtn` handler (the `// FUTURE:` comment), POST the cart and redirect. Never send prices from the browser. GitHub Pages can't run server code, so this means adding a functions host or moving hosting (see 6).

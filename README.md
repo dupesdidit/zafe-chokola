@@ -18,4 +18,4 @@ Plain HTML/CSS/JS, no build step. Open `index.html` in a browser (or serve the f
 - Checkout shows a "Checkout coming soon" (Stripe) modal. No payment code exists.
 
 ## Placeholders
-Photos are Unsplash stock placeholders; logo is a "ZC" text monogram; Cash App cashtag still to come. See HANDOFF.md §9.
+Hero, story and seasonal photos are the founder's own (graded, see images/README.md); product photos are still Unsplash stock; logo is a "ZC" text monogram; Cash App cashtag still to come. See HANDOFF.md §9.
