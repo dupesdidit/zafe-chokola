@@ -1,6 +1,6 @@
 # Zafe Chokola Website — Handoff Guide
 
-_Last updated: Thursday, Oct 1, 2026 (ET). Audience: AI agents and developers picking up this project._
+_Last updated: Thursday, Oct 1, 2026, ~11:30 PM ET (founder questionnaire applied; committed locally, not pushed). Audience: AI agents and developers picking up this project._
 
 ---
 
@@ -8,51 +8,52 @@ _Last updated: Thursday, Oct 1, 2026 (ET). Audience: AI agents and developers pi
 
 | | |
 |---|---|
-| **Brand** | Zafe Chokola — small-batch luxury artisan chocolatier (bonbons, bars, gift boxes) |
-| **Owner** | Sherwinn |
-| **Status** | First draft, live on GitHub Pages. Brand name is real; most other details (address, prices, reviews, etc.) are still placeholders — see §9. |
+| **Brand** | Zafe Chokola: playful chocolate treats with Caribbean (St. Lucian) roots; "chocolate made to evoke a joyful memory" |
+| **Owner** | Sherwinn (site owner/approver). Content comes from the founder's questionnaire (`/workspace/shared/zafe-chokola/genelle-answers.md`, submitted 10/1/26 10:45 PM ET). On the site she is credited only as **"Founder & Chocolatier"**: no personal name, no personal photo (her request). |
+| **Status** | Customised from the founder's questionnaire (Oct 1, 2026): real story, products, prices, contact, policies. **Committed locally, NOT pushed yet** (the live site still shows the first draft until Sherwinn approves). Photos are still stock placeholders; see §9. |
+| **Domain** | Founder owns **Thechocolateaffair.net**. **Not connected yet** (no `CNAME` file, no DNS changes). Connecting it needs approval; see §10.3. |
 | **Stack** | Plain HTML + CSS + vanilla JS. **No build step, no framework, no dependencies.** |
 | **Design reference** | Inspired by the *feel* of https://sanaachocolates.com/ — **not copied**. No text, images, logo, or brand assets from that site are used, and none may be added (see §11). |
 
 ### Design traits borrowed (in spirit only) from the reference
-- Thin dark announcement bar on top → large dramatic hero → short brand story → row of value "badges" → customer quotes → footer with address + pickup hours + socials.
-- Warm, luxe palette (gold / copper-brown / near-black / cream) and an elegant serif + clean sans pairing.
-- Tone: "chocolate as art", handmade, small-batch, local pickup.
+- Thin dark announcement bar on top → large hero → short brand story → row of value "badges" → footer.
+- Warm palette (gold / copper-brown / near-black / cream). The founder loves the colours "as they are", so they were kept.
+- Tone (founder's picks): **playful + modern**, lettering "bold and playful". Rounded display headings, pill buttons, larger radii, slight tilts on badges/tiles; still readable.
 
 ### Our own palette (CSS variables at the top of `css/styles.css`)
 | Variable | Hex | Use |
 |---|---|---|
-| `--cocoa-900` | `#1e1410` | announcement bar, gift section, footer |
-| `--cocoa-800` | `#2a1c16` | dark buttons, gift cards |
+| `--cocoa-900` | `#1e1410` | announcement bar, seasonal section, footer |
+| `--cocoa-800` | `#2a1c16` | dark buttons, logo mark, season tiles, icon circles |
 | `--cocoa-700` | `#3b2820` | spare dark tone |
-| `--copper` | `#a0602f` | accents, eyebrows, italic `<em>`, quote band |
-| `--gold` | `#c9a15a` | primary buttons, borders, stars |
+| `--copper` | `#a0602f` | accents, eyebrows, `<em>` highlight, quote band |
+| `--gold` | `#c9a15a` | primary buttons, borders, badges |
 | `--gold-light` | `#e2c588` | hover, text on dark |
-| `--cream` | `#f8f1e6` | values row, newsletter, cart footer |
+| `--cream` | `#f8f1e6` | values row, allergen card, cart footer |
 | `--ivory` | `#fdfaf4` | page background |
 | `--ink` | `#2b2522` | body text |
 | `--muted` | `#776a62` | secondary text |
 
 ### Fonts (Google Fonts, loaded in `index.html` `<head>`)
-- **Cormorant Garamond** (400/500/600, italic 400) — headings, prices, wordmark (`--serif`)
-- **Jost** (300/400/500) — body, nav, buttons (`--sans`)
-(The reference uses Fraunces + Inter; we deliberately chose different fonts.)
+- **Fredoka** (500/600/700): bold, rounded, playful display font for headings, prices, buttons, nav, wordmark (`--display`; `--serif` is kept as an alias pointing to it)
+- **Jost** (400/500): body text (`--sans`)
+(Changed Oct 1, 2026 from Cormorant Garamond per the founder's "bold and playful" pick. Fredoka has no italics, so `<em>` is upright copper with a gold highlighter stripe in `h2`.)
 
 ### Page sections (in order, all in `index.html`)
-1. **Announcement bar** — pickup / shipping note
-2. **Sticky header** — "ZC" monogram + "Zafe Chokola" wordmark, nav links, **Bag** button with item count, hamburger on ≤860px
-3. **Hero** (`.hero`) — "Where cacao becomes craft." + two CTAs; background image set in CSS
-4. **Our Story** (`#story`) — image with gold frame + "Made by hand" stamp, two paragraphs
-5. **Values** (`.values`) — 4 badges: Hand-tempered, Ethically sourced, Small batch, Natural colour
-6. **Collections** (`#collections`) — product grid rendered from `js/products.js` (`category: "collection"`)
-7. **Quote band** (`.band`) — copper gradient pull-quote
-8. **Gift Boxes** (`#gifts`) — dark section, cards rendered from `js/products.js` (`category: "gift"`)
-9. **Kind Words** (`#reviews`) — 3 testimonial cards (placeholder)
-10. **Newsletter** — "The Chokola Letter" signup (**non-functional demo**)
-11. **Footer** (`#visit`) — address, pickup hours, contact, socials, copyright
+1. **Announcement bar**: "Now shipping with cold packs · Catch us at farmers' markets & events"
+2. **Sticky header**: "ZC" monogram (logo slot) + "Zafe Chokola" wordmark, nav (Our Story, Shop, Seasonal, Ordering & Care, Contact), **Bag** button with item count, hamburger on ≤860px
+3. **Hero** (`.hero`): "Chocolate made for joyful memories." + two CTAs; background photo slot `images/hero.jpg` set in CSS
+4. **Our Story** (`#story`): photo slot `images/story.jpg` with dashed gold frame + "Made with joy" stamp, founder's story, signed "Founder & Chocolatier"
+5. **Values** (`.values`): Made with joy · Milk chocolate (signature) · Seasonal fun · Cold-packed
+6. **Shop** (`#shop`, grid `#collectionGrid`): product cards rendered from `js/products.js` (`category: "collection"`), 3 columns on desktop
+7. **Quote band** (`.band`): founder's mission line
+8. **Seasonal Collections** (`#seasonal`, dark): Valentine's, Easter, Halloween, Birthdays tiles (no products/prices yet) + "Gift cards: coming soon" note
+9. **Ordering & Care** (`#ordering`): Shipping, Markets & events, Paying (cards coming soon + Cash App), Freshness & storage, Damaged or melted, **Allergen notice** (`#allergens`)
+10. **Footer** (`#contact`): tagline, Find Us (shipping / markets & events), Say Hello (email + Instagram), Coming Soon (gift cards, online checkout)
+11. *(Removed Oct 1, 2026: Gift Boxes, Kind Words/testimonials, Newsletter, address, pickup hours, phone, FB/Pinterest. See §9.)*
 12. **Cart drawer**, **checkout placeholder modal**, **toast** — overlays at the end of `<body>`
 
-Responsive breakpoints: `1024px` (4→2 product columns, 2-col footer), `860px` (mobile nav, stacked story/newsletter, 1-col gifts/reviews), `560px` (1-col products, compact header, full-width hero buttons).
+Responsive breakpoints: `1024px` (3→2 product columns, 2-col info/season grids and footer), `860px` (mobile nav, stacked story), `560px` (1-col products/info/footer, compact header, full-width hero buttons).
 
 ---
 
@@ -79,7 +80,8 @@ chocolate-site/
 ├── index.html          # All page markup + overlays (cart drawer, checkout modal, toast)
 ├── css/styles.css      # All styles. Palette/fonts as CSS variables at top; responsive rules at bottom
 ├── js/products.js      # THE product catalogue (single source of truth) → window.ZC_PRODUCTS
-├── js/main.js          # Renders product cards, cart logic + localStorage, drawer/modal, mobile nav, newsletter demo
+├── js/main.js          # Renders product cards, image fallback, cart logic + localStorage, drawer/modal, mobile nav
+├── images/             # Photo slots (stock placeholders now): hero.jpg, story.jpg, products/*.jpg, logo/ (empty). See images/README.md
 ├── tools/screenshot.py # Playwright: screenshots + cart smoke test (local file or any URL)
 ├── README.md           # Short readme
 ├── HANDOFF.md          # This document
@@ -110,30 +112,39 @@ Script load order matters: `products.js` **must** load before `main.js` (both at
 | Field | Type | Notes |
 |---|---|---|
 | `id` | string | Unique, stable slug; used as the cart key. Don't reuse. |
-| `category` | `"collection"` \| `"gift"` | `collection` → "Bonbons & bars" grid (light cards); `gift` → "Gift Boxes" (dark cards) |
+| `category` | `"collection"` \| `"gift"` | `collection` → Shop grid. `gift` is still supported in `main.js` but the Gift Boxes section was removed (none offered); re-add a `#giftGrid` element if gift boxes return. |
 | `name` | string | Card title |
 | `detail` | string | Small uppercase line (e.g. "9 pieces · hand-painted shells") |
 | `description` | string | 1–2 sentence blurb |
 | `price` | number | USD, e.g. `32` (formatted as `$32.00`) |
-| `image` | string (URL) | Currently Unsplash URLs with `?w=900&q=80&auto=format&fit=crop` |
+| `image` | string (relative path) | Local photo slot, e.g. `images/products/spooky-bars.jpg` (currently holds a stock photo) |
+| `fallback` | string (URL) | Optional. Stock (Unsplash) URL used automatically if the local `image` file is missing (handled in `main.js` via `data-fallback`) |
 | `badge` | string | Optional corner label ("Bestseller"); `""` for none |
 | `stripePaymentLink` | string | **Empty for now.** Future Stripe Payment Link URL (`https://buy.stripe.com/...`). Not read by any code yet. |
 
-Current products (all placeholder prices): Signature Bonbons $32, Single-Origin 72% Bar $14, Spiced Fruit & Nut Bark $18, Milk & Roasted Hazelnut $13 (collection); The Atelier Box $58, Le Grand Coffret $89, Petit Cœur $24 (gift).
+Current products (real, from the founder's questionnaire): **Spooky Bars $8.00**, **Pumpkin Bites $20.00**, **Kids Pops $3.00 each** (all `collection`). Sizes/piece counts, ingredients and per-product photos are not provided yet, so descriptions make no ingredient claims. Signature flavour: milk chocolate.
 
 ---
 
 ## 5. How to edit
 
-- **Add / edit / remove a product** → edit `js/products.js` only. Grids re-render automatically. Collections look best in multiples of 4 (desktop), gifts in multiples of 3.
-- **Copy** (hero, story, values, quote, reviews, newsletter, footer, announcement bar) → `index.html`. Text is static HTML; search for the phrase.
-- **Images**
-  - Product images → `image` field in `products.js`.
-  - Story image → `<img>` in `#story` in `index.html`.
-  - Hero background → `.hero { background: … url(...) }` in `css/styles.css`.
-  - For real photos: put files in a new `images/` folder and use **relative paths** (`images/bonbons.jpg`, or `../images/hero.jpg` from inside the CSS). Compress to ~200–400 KB, ~1600px wide for the hero, ~900px for cards.
+- **Add / edit / remove a product** → edit `js/products.js` only. The grid re-renders automatically and looks best in multiples of 3 on desktop.
+- **Copy** (hero, story, values, quote, seasonal, ordering & care, footer, announcement bar) → `index.html`. Text is static HTML; search for the phrase.
+- **Images / photo slots** (full table with sizes in `images/README.md`). To use a real photo, **overwrite the slot file at the same path**; no code change needed:
+  | Slot | Where it shows | Recommended size |
+  |---|---|---|
+  | `images/hero.jpg` | hero background (`.hero` in `css/styles.css`, fallback Unsplash URL is the 2nd `url()`) | 1800×1100, ≤300 KB, subject centre/right |
+  | `images/story.jpg` | Our Story `<img>` (`data-fallback` attribute) | 1000×1250 (4:5), ≤250 KB |
+  | `images/products/spooky-bars.jpg` | Spooky Bars card + bag thumbnail | 900×900 square, ≤200 KB |
+  | `images/products/pumpkin-bites.jpg` | Pumpkin Bites card + bag thumbnail | 900×900 square, ≤200 KB |
+  | `images/products/kids-pops.jpg` | Kids Pops card + bag thumbnail | 900×900 square, ≤200 KB |
+  | `images/logo/logo.svg` (**empty slot**) | header + footer logo; currently the "ZC" text monogram (`.logo-mark`, see `<!-- LOGO SLOT -->` in `index.html`) | SVG preferred, else transparent PNG ≥512 px |
+  | `images/logo/favicon.png` (**empty slot**) | browser tab icon; currently an inline "ZC" SVG data-URI `<link rel="icon">` | 512×512 |
+  - All slots currently hold compressed Unsplash stock photos (Unsplash License). The founder says she has "lots" of photos and will send her logo file.
+  - Fallback: if a slot file is missing, `main.js` swaps product/story images to the `fallback`/`data-fallback` Unsplash URL; the hero CSS shows the Unsplash layer underneath.
+  - When the logo arrives: replace `<span class="logo-mark">ZC</span>` (header + footer) with `<img src="images/logo/logo.svg" alt="Zafe Chokola" class="logo-img">`, add a height rule, and point the favicon `<link>` at `images/logo/favicon.png`.
 - **Colours / fonts** → CSS variables at the top of `css/styles.css`; swap the Google Fonts `<link>` in `index.html` if fonts change.
-- **Brand name** appears in: `<title>`, meta description, header + footer logo (`.logo-mark` "ZC", `.logo-text`), story paragraph, copyright, newsletter eyebrow ("The Chokola Letter"), README, comments in JS. `rg -n "Zafe|Chokola|ZC"` finds them all.
+- **Brand name** appears in: `<title>`, meta description, favicon, header + footer logo (`.logo-mark` "ZC", `.logo-text`), story paragraph, copyright, README, comments in JS. `rg -n "Zafe|Chokola|ZC"` finds them all.
 - **Keep all asset paths relative** (no leading `/`) — the site is served from the `/zafe-chokola/` subpath on GitHub Pages, so absolute paths will 404.
 
 ---
@@ -153,7 +164,7 @@ cd /workspace/chocolate-site
 python3 tools/screenshot.py                                        # local copy
 python3 tools/screenshot.py https://dupesdidit.github.io/zafe-chokola/   # live site
 ```
-Writes `screenshots/hero.png` (1440×900 viewport), `desktop.png` (1440 wide, full page), `mobile.png` (390 wide, full page, 1x). It also adds 2 items to the bag, reloads, and prints counts/subtotal plus any console errors. Requires Python Playwright (installed on the box) and uses system Chrome at `/usr/bin/google-chrome` if present. Fixed-position elements (toast, drawer) can show up oddly in full-page shots — they are hidden with `visibility: hidden` when inactive for this reason.
+Writes `screenshots/hero.png` (1440×900 viewport), `desktop.png` (1440 wide, full page), `mobile.png` (390 wide, full page, 1x). It also adds the first 2 products to the bag (currently Spooky Bars + Pumpkin Bites → expect count 2, subtotal $28.00), reloads, and prints counts/subtotal plus any console errors. Requires Python Playwright (installed on the box) and uses system Chrome at `/usr/bin/google-chrome` if present. Fixed-position elements (toast, drawer) can show up oddly in full-page shots — they are hidden with `visibility: hidden` when inactive for this reason.
 
 ---
 
@@ -189,36 +200,40 @@ If committing as an agent, a working identity is: `git -c user.name=dupesdidit -
 
 ## 9. Placeholders still to replace
 
-- [ ] **All product images**: Unsplash stock photos hotlinked from `images.unsplash.com` (Unsplash License, OK to use, but they aren't Zafe Chokola's products). Also the hero background and the story image.
-- [ ] **Product names, descriptions, sizes, prices** in `products.js` (all invented)
-- [ ] **Address**: "123 Placeholder Street, Your City, ST 00000"; the "Get directions" link is `#`
-- [ ] **Pickup hours**: Fri 2–6 pm, Sat 10 am–2 pm (invented)
-- [ ] **Contact**: `hello@example.com`, `(555) 010-0000`
-- [ ] **Social links**: IG / FB / PI all point to `#`
-- [ ] **Testimonials**: "Placeholder Reviewer A/B/C" with invented quotes. Replace with real, permissioned reviews only.
-- [ ] **Quote band**: attributed to "Head Chocolatier (placeholder)"
-- [ ] **Story copy, values, "Est. 2026"**: invented brand story; confirm with Sherwinn
-- [ ] **Announcement bar**: "Complimentary local pickup every Friday · Insulated shipping on orders over $75" (invented policy)
-- [ ] **Footer tagline**: "First draft — details are placeholders."
-- [ ] **Newsletter**: demo only, nothing is sent
-- [ ] **Checkout**: placeholder modal, no payments
-- [ ] **Monogram logo**: "ZC" text in a CSS circle; replace with a real logo (SVG preferred)
-- [ ] **No favicon** (the browser logs a harmless 404 for `/favicon.ico`)
+_Updated Oct 1, 2026 after applying the founder's questionnaire._
+
+**Done (real content now):** story + name meaning, mission line (quote band), "Founder & Chocolatier" credit, products + prices, allergen notice, shipping/markets ordering info, payment methods, contact email, Instagram, damaged/melted refund policy, freshness (up to 6 months), seasonal collections, gift-cards-coming-soon note, playful heading font. **Removed:** street address + "Get directions", pickup hours, phone, Facebook/Pinterest, testimonials, press, newsletter, gift boxes, custom-order promise, "Est. 2026", invented values (ethically sourced, natural colour, etc.).
+
+Still open:
+- [ ] **Photos**: every slot in `images/` is an Unsplash stock placeholder (hero, story, 3 products). Founder has "lots" of photos to send; drop them into the slots (see §5).
+- [ ] **Logo**: founder said she'll send her logo file. None received (no upload link in the questionnaire). "ZC" text monogram + inline SVG favicon until then.
+- [ ] **Cash App $cashtag**: Cash App is listed as accepted, but no cashtag was given. Marked `<!-- TODO(owner) -->` in the "Paying" card in `index.html`. Don't guess it.
+- [ ] **Product details**: sizes/piece counts, what's inside and ingredients aren't provided; descriptions stay generic. Confirm whether Spooky Bars ($8) and Pumpkin Bites ($20) are per bar/box and their sizes. Kids Pops are "$3.00 a piece" (shown as "Priced per pop").
+- [ ] **Seasonal collections**: tiles only (Valentine's, Easter, Halloween, Birthdays); no products, timing or prices yet.
+- [ ] **Gift cards**: "coming soon" note only; no mechanism.
+- [ ] **Shipping details**: where she ships to, rates, which months shipping pauses, order lead time/minimums: not provided. Copy says only "pauses during the hottest months".
+- [ ] **Markets/events schedule**: none given; copy points to Instagram.
+- [ ] **Location/heritage-inspired flavours**: no answer to "Where are you based?"; site mentions only her St. Lucian roots, no business location.
+- [ ] **Checkout**: placeholder modal, no payments ("coming soon via Stripe").
+- [ ] **Policies not yet given**: cancellations/changes, holiday cut-offs, privacy policy, terms. Refund policy covers damaged/melted orders only.
+- [ ] **Newsletter**: removed (founder: "not right now"). Later she'd like to send seasonal launches + discounts/offers.
+- [ ] **Custom/corporate orders**: not offered "at this time" (she noted 3 weeks' notice for the future). No mention on the site.
+- [ ] **Domain**: `Thechocolateaffair.net` (owned by the founder, **not connected**). Note it differs from the brand name; confirm she wants it as the site address.
 - [ ] No social/OG preview tags (`og:title`, `og:image`)
 
 ---
 
 ## 10. Roadmap to going official
 
-1. **Content**: real product list, prices, professional photos (self-hosted in `images/`), real story/about copy, address, hours, contact, socials, logo (SVG) + favicon + `apple-touch-icon` + Open Graph image/tags.
+1. **Content**: real photos into the `images/` slots, logo (SVG) + favicon + `apple-touch-icon` + Open Graph image/tags, product sizes, Cash App cashtag (see §9).
 2. **Payments (Stripe)**: pick one approach:
    - **Stripe Payment Links** (no code, simplest): one link per product, stored in `stripePaymentLink`. Each link buys **one product**, so it doesn't fit a mixed cart. Options: replace "Add to bag" with "Buy now" buttons, or accept single-item checkout.
    - **Stripe Checkout for the whole cart** (recommended): needs a tiny server-side function (Netlify/Vercel/Cloudflare Function) that takes `[{id, qty}]`, looks up **server-side prices** (Stripe Price IDs, e.g. a `stripePriceId` field), creates a Checkout Session, and returns its URL. Front-end change: in the `#checkoutBtn` handler (the `// FUTURE:` comment), POST the cart and redirect. Never send prices from the browser. GitHub Pages can't run server code, so this means adding a functions host or moving hosting (see 6).
-   - Add success/cancel pages (`success.html` clears the cart; `cancel.html` returns to the bag), shipping and tax settings in Stripe, plus pickup vs. shipping choice and a gift-note field (the gifts copy promises "personal note at checkout").
+   - Add success/cancel pages (`success.html` clears the cart; `cancel.html` returns to the bag), shipping and tax settings in Stripe (shipping only, no pickup; account for the summer shipping pause).
    - Food business compliance: allergen info, ingredients, shipping/heat policy, refund policy, privacy policy, terms.
-3. **Custom domain**: add a `CNAME` file containing e.g. `www.zafechokola.com` to the repo root (or set it in repo Settings → Pages), create the DNS records at the registrar (CNAME `www` → `dupesdidit.github.io`; apex A records to GitHub Pages IPs), then enable "Enforce HTTPS". Relative paths keep working.
-4. **Analytics & SEO**: privacy-friendly analytics (Plausible / GA4 / Cloudflare Web Analytics), `sitemap.xml`, `robots.txt`, meta/OG tags, LocalBusiness structured data (address, hours).
-5. **Newsletter**: connect the form to Mailchimp / Klaviyo / Buttondown (embed form or API via a serverless function).
+3. **Custom domain**: the founder owns **`Thechocolateaffair.net`** (not connected yet; needs approval). Add a `CNAME` file containing e.g. `www.thechocolateaffair.net` to the repo root (or set it in repo Settings → Pages), create the DNS records at the registrar (CNAME `www` → `dupesdidit.github.io`; apex A records to GitHub Pages IPs), then enable "Enforce HTTPS". Relative paths keep working.
+4. **Analytics & SEO**: privacy-friendly analytics (Plausible / GA4 / Cloudflare Web Analytics), `sitemap.xml`, `robots.txt`, meta/OG tags, Organization structured data (no street address; she prefers not to show one).
+5. **Newsletter** (later; founder said not right now): when wanted, re-add a signup connected to Mailchimp / Klaviyo / Buttondown for seasonal launches and offers.
 6. **Hosting options if the site outgrows Pages**:
    - **Netlify / Vercel / Cloudflare Pages**: drop-in static hosting for the same files, plus serverless functions for Stripe Checkout and forms (Netlify Forms could handle the newsletter/contact form).
    - **Shopify** (or Square Online / Squarespace Commerce): if Sherwinn wants inventory, order management, shipping labels, and taxes handled for him. That means rebuilding the design as a Shopify theme; this static site serves as the design spec.
@@ -231,7 +246,8 @@ If committing as an agent, a working identity is: `git -c user.name=dupesdidit -
 1. **Do not copy the reference site.** No text, photos, logo, brand name, or other assets from sanaachocolates.com. Inspiration only.
 2. **Confirm with Sherwinn before publishing.** Pushing to `main` deploys publicly right away. Get explicit approval for any public change, new repos/hosting, or domain changes.
 3. **Never touch payments without explicit approval.** No Stripe keys in this repo (it's public). Secret keys belong only in a serverless host's environment variables. Don't create Stripe products/links or enable real checkout without Sherwinn's go-ahead.
-4. Use only properly licensed images (Sherwinn's own photos, or Unsplash/Pexels-style licences). Note the source.
+4. Use only properly licensed images (the founder's own photos, or Unsplash/Pexels-style licences). Note the source. No personal photo of the founder (her request).
 5. Keep it build-free and paths relative, unless a deliberate migration is agreed.
 6. Don't force-push or rewrite `main` history without approval. Don't leave local servers/tunnels running.
 7. Update this HANDOFF.md whenever you change structure, data schema, hosting, or workflow.
+8. Don't invent facts (ingredients, sourcing, locations, reviews, press, cashtags). Use only what the founder has provided.

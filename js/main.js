@@ -39,13 +39,31 @@
   function count() { return Object.keys(cart).reduce(function (a, id) { return a + cart[id]; }, 0); }
   function subtotal() { return Object.keys(cart).reduce(function (a, id) { return a + cart[id] * byId[id].price; }, 0); }
 
+  /* ---------- Images: local photo slot with stock fallback ---------- */
+  // Any <img data-fallback="..."> whose local file is missing swaps to the fallback URL once.
+  document.addEventListener("error", function (e) {
+    var img = e.target;
+    if (img && img.tagName === "IMG" && img.dataset.fallback && img.src !== img.dataset.fallback) {
+      img.src = img.dataset.fallback;
+      delete img.dataset.fallback;
+    }
+  }, true);
+  // Static images that already failed before this script ran (e.g. the story photo)
+  Array.prototype.forEach.call(document.querySelectorAll("img[data-fallback]"), function (img) {
+    if (img.complete && img.naturalWidth === 0 && img.getAttribute("src")) { img.src = img.dataset.fallback; delete img.dataset.fallback; }
+  });
+  function imgTag(p, alt, lazy) {
+    return '<img src="' + esc(p.image) + '"' + (p.fallback ? ' data-fallback="' + esc(p.fallback) + '"' : "") +
+      ' alt="' + esc(alt) + '"' + (lazy ? ' loading="lazy"' : "") + " />";
+  }
+
   /* ---------- Product rendering ---------- */
   function card(p, isGift) {
     return (
       '<article class="' + (isGift ? "gift-card" : "product-card") + '">' +
         '<div class="p-media">' +
           (p.badge ? '<span class="p-badge">' + esc(p.badge) + "</span>" : "") +
-          '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '" loading="lazy" />' +
+          imgTag(p, p.name, true) +
         "</div>" +
         '<div class="p-body">' +
           '<p class="p-detail">' + esc(p.detail) + "</p>" +
@@ -61,7 +79,9 @@
   }
   function renderProducts() {
     $("#collectionGrid").innerHTML = PRODUCTS.filter(function (p) { return p.category === "collection"; }).map(function (p) { return card(p, false); }).join("");
-    $("#giftGrid").innerHTML = PRODUCTS.filter(function (p) { return p.category === "gift"; }).map(function (p) { return card(p, true); }).join("");
+    // Gift boxes: none offered right now. If "gift" products are added later, add a #giftGrid section back to index.html.
+    var giftGrid = $("#giftGrid");
+    if (giftGrid) giftGrid.innerHTML = PRODUCTS.filter(function (p) { return p.category === "gift"; }).map(function (p) { return card(p, true); }).join("");
   }
 
   /* ---------- Cart rendering ---------- */
@@ -77,14 +97,14 @@
 
     if (!ids.length) {
       $("#cartItems").innerHTML =
-        '<div class="cart-empty"><p>Your bag is empty.</p><a href="#collections" class="link-arrow" data-close>Browse the collection &rarr;</a></div>';
+        '<div class="cart-empty"><p>Your bag is empty.</p><a href="#shop" class="link-arrow" data-close>Browse the treats &rarr;</a></div>';
       return;
     }
     $("#cartItems").innerHTML = ids.map(function (id) {
       var p = byId[id], q = cart[id];
       return (
         '<div class="cart-item">' +
-          '<img src="' + esc(p.image) + '" alt="" />' +
+          imgTag(p, "", false) +
           '<div class="ci-info">' +
             '<p class="ci-name">' + esc(p.name) + "</p>" +
             '<p class="ci-detail">' + esc(p.detail) + " · " + money(p.price) + "</p>" +
@@ -152,7 +172,7 @@
   $("#clearCart").addEventListener("click", function () { cart = {}; save(); renderCart(); });
   $("#checkoutBtn").addEventListener("click", function () {
     if (!count()) return;
-    // FUTURE: redirect to Stripe Payment Link / Checkout session using product.stripePaymentLink.
+    // FUTURE (needs owner approval): redirect to Stripe Payment Link / Checkout session using product.stripePaymentLink.
     openModal();
   });
   $("#modalClose").addEventListener("click", closeModal);
@@ -176,15 +196,6 @@
   });
   var header = $(".site-header");
   window.addEventListener("scroll", function () { header.classList.toggle("scrolled", window.scrollY > 40); }, { passive: true });
-
-  /* ---------- Newsletter (non-functional) ---------- */
-  $("#newsForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    var v = $("#email").value.trim(), note = $("#newsNote");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { note.textContent = "Please enter a valid email address."; return; }
-    note.textContent = "Thank you — you’re on the list. (Demo only: nothing was sent.)";
-    $("#email").value = "";
-  });
 
   renderProducts();
   renderCart();

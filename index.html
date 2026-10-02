@@ -3,33 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Zafe Chokola — Hand-Crafted Fine Chocolate</title>
-  <meta name="description" content="Zafe Chokola: small-batch bonbons, bars and gift boxes made by hand." />
+  <title>Zafe Chokola — Chocolate Made for Joyful Memories</title>
+  <meta name="description" content="Zafe Chokola: playful chocolate treats with Caribbean roots, made to evoke a joyful memory. Shipped with cold packs and found at farmers' markets and events." />
+  <!-- Temporary "ZC" favicon (inline SVG). Replace with images/logo/favicon.png once the logo arrives. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='31' fill='%232a1c16'/%3E%3Ctext x='32' y='42' font-family='Arial,sans-serif' font-weight='700' font-size='26' text-anchor='middle' fill='%23e2c588'%3EZC%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Jost:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
-  <div class="announce">Complimentary local pickup every Friday &middot; Insulated shipping on orders over $75</div>
+  <div class="announce">Now shipping with cold packs &middot; Catch us at farmers&rsquo; markets &amp; events</div>
 
   <header class="site-header" id="top">
     <div class="container nav">
+      <!-- LOGO SLOT: keep the "ZC" text monogram until the owner's logo file arrives (images/logo/logo.svg). See HANDOFF.md §5. -->
       <a href="#top" class="logo" aria-label="Zafe Chokola home">
         <span class="logo-mark">ZC</span>
         <span class="logo-text">Zafe Chokola</span>
       </a>
       <nav class="nav-links" id="navLinks" aria-label="Primary">
         <a href="#story">Our Story</a>
-        <a href="#collections">Collections</a>
-        <a href="#gifts">Gift Boxes</a>
-        <a href="#reviews">Kind Words</a>
-        <a href="#visit">Visit</a>
+        <a href="#shop">Shop</a>
+        <a href="#seasonal">Seasonal</a>
+        <a href="#ordering">Ordering &amp; Care</a>
+        <a href="#contact">Contact</a>
       </nav>
       <div class="nav-actions">
         <button class="cart-btn" id="cartOpen" aria-label="Open cart">
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8Zm3 0V6a4 4 0 0 1 8 0v2"/></svg>
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8Zm3 0V6a4 4 0 0 1 8 0v2"/></svg>
           <span>Bag</span>
           <span class="cart-count" id="cartCount">0</span>
         </button>
@@ -41,34 +44,36 @@
   </header>
 
   <main>
-    <!-- HERO -->
+    <!-- HERO (background photo slot: images/hero.jpg, set in css/styles.css) -->
     <section class="hero">
       <div class="hero-overlay"></div>
       <div class="container hero-content">
-        <p class="eyebrow">Small-batch chocolatier &middot; Est. 2026</p>
-        <h1>Where cacao<br /><em>becomes craft.</em></h1>
-        <p class="hero-sub">Bonbons painted by hand, bars ground from single-estate beans, and gift boxes made to be remembered.</p>
+        <p class="eyebrow">Chocolate with Caribbean roots</p>
+        <h1>Chocolate made for<br /><em>joyful memories.</em></h1>
+        <p class="hero-sub">Playful treats and seasonal collections, shipped to your door with cold packs or found at farmers&rsquo; markets and events.</p>
         <div class="hero-ctas">
-          <a href="#collections" class="btn btn-gold">Shop the Collection</a>
-          <a href="#gifts" class="btn btn-ghost">Explore Gift Boxes</a>
+          <a href="#shop" class="btn btn-gold">Shop the Treats</a>
+          <a href="#story" class="btn btn-ghost">Our Story</a>
         </div>
       </div>
       <a href="#story" class="scroll-cue" aria-label="Scroll down">Scroll</a>
     </section>
 
-    <!-- STORY -->
+    <!-- STORY (photo slot: images/story.jpg) -->
     <section class="story section" id="story">
       <div class="container story-grid">
         <div class="story-media">
-          <img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=1000&q=80&auto=format&fit=crop" alt="Assorted handmade chocolate truffles" loading="lazy" />
-          <div class="story-stamp"><span>Made<br/>by hand</span></div>
+          <img src="images/story.jpg" data-fallback="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=1000&q=80&auto=format&fit=crop" alt="An assortment of chocolates" loading="lazy" />
+          <div class="story-stamp"><span>Made<br/>with joy</span></div>
         </div>
         <div class="story-copy">
           <p class="eyebrow dark">Our Story</p>
-          <h2>A small atelier with a <em>patient</em> philosophy.</h2>
-          <p>Zafe Chokola began at a kitchen table with a marble slab, a thermometer and an obsession with getting the snap just right. Today we still temper every batch by hand, sourcing cacao from growers we know by name.</p>
-          <p>Each season our chocolatiers develop a handful of new flavours — inspired by markets, travels and the spice drawer — and paint every shell before it is filled, sealed and boxed.</p>
-          <a href="#collections" class="link-arrow">Taste the collection &rarr;</a>
+          <h2>A sweet dream, born from <em>joy.</em></h2>
+          <p>Zafe Chokola began with a moment of self-reflection &mdash; a long, honest look at the things that bring me the most joy. Chocolate was right at the top of the list! So I signed up for an online chocolate course, and the rest is history.</p>
+          <p>The name is an ode to my Caribbean roots on the island of St.&nbsp;Lucia. In St.&nbsp;Lucian Kw&eacute;y&ograve;l, <em lang="acf">zaf&egrave;</em> means &ldquo;business&rdquo; and <em lang="acf">chokola</em> means &ldquo;chocolate&rdquo; &mdash; so Zafe Chokola is, quite simply, a chocolate business, with the words the other way around.</p>
+          <p>Every piece is made in the hope of sparking a joyful memory &mdash; the kind you&rsquo;ll still be smiling about long after the last bite.</p>
+          <p class="signature">&mdash; Founder &amp; Chocolatier</p>
+          <a href="#shop" class="link-arrow">Taste the treats &rarr;</a>
         </div>
       </div>
     </section>
@@ -76,20 +81,20 @@
     <!-- VALUES -->
     <section class="values">
       <div class="container values-grid">
-        <div class="value"><span class="v-icon">&#10022;</span><h3>Hand-tempered</h3><p>Every batch, every day.</p></div>
-        <div class="value"><span class="v-icon">&#10048;</span><h3>Ethically sourced</h3><p>Direct-trade cacao.</p></div>
-        <div class="value"><span class="v-icon">&#10086;</span><h3>Small batch</h3><p>Made in limited runs.</p></div>
-        <div class="value"><span class="v-icon">&#9672;</span><h3>Natural colour</h3><p>Plant-based pigments.</p></div>
+        <div class="value"><span class="v-icon">&#9733;</span><h3>Made with joy</h3><p>Every treat, every time.</p></div>
+        <div class="value"><span class="v-icon">&#9829;</span><h3>Milk chocolate</h3><p>Our signature flavour.</p></div>
+        <div class="value"><span class="v-icon">&#10047;</span><h3>Seasonal fun</h3><p>Collections for every celebration.</p></div>
+        <div class="value"><span class="v-icon">&#10052;</span><h3>Cold-packed</h3><p>Shipped with care.</p></div>
       </div>
     </section>
 
-    <!-- COLLECTIONS -->
-    <section class="collections section" id="collections">
+    <!-- SHOP -->
+    <section class="collections section" id="shop">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow dark">The Collection</p>
-          <h2>Bonbons &amp; bars</h2>
-          <p class="section-sub">Made fresh each week. Best enjoyed within three weeks of purchase.</p>
+          <p class="eyebrow dark">The Treats</p>
+          <h2>Pick your <em>happy.</em></h2>
+          <p class="section-sub">Our signature flavour is milk chocolate. Please read our <a href="#allergens" class="inline-link">allergen notice</a> before ordering.</p>
         </div>
         <div class="product-grid" id="collectionGrid"></div>
       </div>
@@ -98,95 +103,94 @@
     <!-- QUOTE BAND -->
     <section class="band">
       <div class="container">
-        <p class="band-quote">&ldquo;Chocolate should be eaten slowly — the way it was made.&rdquo;</p>
-        <p class="band-cite">— Head Chocolatier (placeholder)</p>
+        <p class="band-quote">&ldquo;Made in the hope of always evoking a joyful memory.&rdquo;</p>
+        <p class="band-cite">&mdash; Founder &amp; Chocolatier</p>
       </div>
     </section>
 
-    <!-- GIFTS -->
-    <section class="gifts section" id="gifts">
+    <!-- SEASONAL -->
+    <section class="seasonal section" id="seasonal">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow">Gift Boxes</p>
-          <h2>Made to be given</h2>
-          <p class="section-sub light">Every box is wrapped by hand and can include a personal note at checkout.</p>
+          <p class="eyebrow">Seasonal Collections</p>
+          <h2>Something sweet for every celebration</h2>
+          <p class="section-sub light">Look out for limited collections throughout the year. Follow <a href="https://instagram.com/zafechokola2025" target="_blank" rel="noopener" class="inline-link light">@zafechokola2025</a> to hear when each one drops.</p>
         </div>
-        <div class="gift-grid" id="giftGrid"></div>
+        <div class="season-grid">
+          <div class="season"><span class="s-icon" aria-hidden="true">&#9829;</span><h3>Valentine&rsquo;s</h3></div>
+          <div class="season"><span class="s-icon" aria-hidden="true">&#10047;</span><h3>Easter</h3></div>
+          <div class="season"><span class="s-icon" aria-hidden="true">&#9790;</span><h3>Halloween</h3></div>
+          <div class="season"><span class="s-icon" aria-hidden="true">&#9733;</span><h3>Birthdays</h3></div>
+        </div>
+        <div class="giftcard-note">
+          <span class="gc-tag">Coming soon</span>
+          <p><strong>Gift cards</strong> &mdash; the easiest way to share a little joy. Stay tuned!</p>
+        </div>
       </div>
     </section>
 
-    <!-- REVIEWS -->
-    <section class="reviews section" id="reviews">
+    <!-- ORDERING & CARE -->
+    <section class="ordering section" id="ordering">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow dark">Kind Words</p>
-          <h2>From our customers</h2>
+          <p class="eyebrow dark">Ordering &amp; Care</p>
+          <h2>Getting your chocolate to you</h2>
         </div>
-        <div class="review-grid">
-          <figure class="review">
-            <div class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <blockquote>&ldquo;Almost too beautiful to eat. Almost. The passion fruit bonbon is unreal.&rdquo;</blockquote>
-            <figcaption>— Placeholder Reviewer A.</figcaption>
-          </figure>
-          <figure class="review">
-            <div class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <blockquote>&ldquo;Ordered the Atelier Box for my mother’s birthday. She called me twice to talk about it.&rdquo;</blockquote>
-            <figcaption>— Placeholder Reviewer B.</figcaption>
-          </figure>
-          <figure class="review">
-            <div class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <blockquote>&ldquo;The 72% bar has ruined supermarket chocolate for me forever.&rdquo;</blockquote>
-            <figcaption>— Placeholder Reviewer C.</figcaption>
-          </figure>
+        <div class="info-grid">
+          <div class="info-card">
+            <h3>Shipping</h3>
+            <p>We ship our chocolates and pack every order with cold packs to help it arrive in perfect shape. Shipping pauses during the hottest months of the year, so the chocolate never has to brave the heat.</p>
+          </div>
+          <div class="info-card">
+            <h3>Markets &amp; events</h3>
+            <p>Prefer to pick out your treats in person? You&rsquo;ll find us at farmers&rsquo; markets and events. Follow <a href="https://instagram.com/zafechokola2025" target="_blank" rel="noopener" class="inline-link">@zafechokola2025</a> to see where we&rsquo;ll be next.</p>
+          </div>
+          <div class="info-card">
+            <h3>Paying</h3>
+            <p>We accept credit and debit cards (secure online card checkout is coming soon) and Cash App.</p>
+            <!-- TODO(owner): add the Cash App $cashtag here once confirmed — do not guess it. -->
+          </div>
+          <div class="info-card">
+            <h3>Freshness &amp; storage</h3>
+            <p>Our chocolates stay fresh for up to 6 months. Store them somewhere cool and dry, away from direct sunlight, heat and strong smells.</p>
+          </div>
+          <div class="info-card">
+            <h3>Damaged or melted?</h3>
+            <p>If your order arrives damaged or melted, we&rsquo;ll refund your payment. Just email us at <a href="mailto:Zafechokola@gmail.com" class="inline-link">Zafechokola@gmail.com</a>.</p>
+          </div>
+          <div class="info-card allergen" id="allergens">
+            <h3>Allergen notice</h3>
+            <p>Our products and kitchen contain <strong>tree nuts, peanuts, dairy, gluten/wheat and eggs</strong>. If you have a food allergy, please get in touch before ordering.</p>
+          </div>
         </div>
-      </div>
-    </section>
-
-    <!-- NEWSLETTER -->
-    <section class="newsletter">
-      <div class="container newsletter-inner">
-        <div>
-          <p class="eyebrow">The Chokola Letter</p>
-          <h2>First taste of new flavours</h2>
-          <p>Seasonal launches, pickup reminders and the occasional recipe. No more than twice a month.</p>
-        </div>
-        <form class="news-form" id="newsForm" novalidate>
-          <label for="email" class="sr-only">Email address</label>
-          <input type="email" id="email" placeholder="Your email address" required />
-          <button type="submit" class="btn btn-gold">Subscribe</button>
-          <p class="form-note" id="newsNote" role="status"></p>
-        </form>
       </div>
     </section>
   </main>
 
-  <!-- FOOTER / VISIT -->
-  <footer class="site-footer" id="visit">
+  <!-- FOOTER / CONTACT -->
+  <footer class="site-footer" id="contact">
     <div class="container footer-grid">
       <div>
         <a href="#top" class="logo light"><span class="logo-mark">ZC</span><span class="logo-text">Zafe Chokola</span></a>
-        <p class="foot-tag">Hand-crafted fine chocolate.<br />First draft &mdash; details are placeholders.</p>
+        <p class="foot-tag">Chocolate made to evoke a joyful memory.</p>
       </div>
       <div>
-        <h4>Visit the Atelier</h4>
-        <p>123 Placeholder Street<br />Your City, ST 00000</p>
-        <a href="#" class="link-arrow light">Get directions &rarr;</a>
-      </div>
-      <div>
-        <h4>Pickup Hours</h4>
-        <p>Friday &nbsp;2 – 6 pm<br />Saturday &nbsp;10 am – 2 pm</p>
+        <h4>Find Us</h4>
+        <p>Shipping orders<br />Farmers&rsquo; markets &amp; events</p>
       </div>
       <div>
         <h4>Say Hello</h4>
-        <p><a href="mailto:hello@example.com">hello@example.com</a><br />(555) 010-0000</p>
-        <div class="socials">
-          <a href="#" aria-label="Instagram">IG</a><a href="#" aria-label="Facebook">FB</a><a href="#" aria-label="Pinterest">PI</a>
-        </div>
+        <p><a href="mailto:Zafechokola@gmail.com">Zafechokola@gmail.com</a></p>
+        <p><a href="https://instagram.com/zafechokola2025" target="_blank" rel="noopener">Instagram: @zafechokola2025</a></p>
+      </div>
+      <div>
+        <h4>Coming Soon</h4>
+        <p>Gift cards<br />Online card checkout</p>
       </div>
     </div>
     <div class="container foot-bottom">
       <span>&copy; 2026 Zafe Chokola. All rights reserved.</span>
-      <span>Photography via Unsplash</span>
+      <span>Placeholder photography via Unsplash</span>
     </div>
   </footer>
 
@@ -200,7 +204,7 @@
     <div class="cart-body" id="cartItems"></div>
     <div class="cart-foot">
       <div class="cart-row"><span>Subtotal</span><strong id="cartSubtotal">$0.00</strong></div>
-      <p class="cart-note">Taxes and shipping calculated at checkout.</p>
+      <p class="cart-note">Shipping and taxes calculated at checkout. Orders ship with cold packs.</p>
       <button class="btn btn-gold btn-block" id="checkoutBtn">Checkout</button>
       <button class="text-btn" id="clearCart">Clear bag</button>
     </div>
@@ -212,7 +216,7 @@
       <button class="icon-btn modal-x" id="modalClose" aria-label="Close">&times;</button>
       <p class="eyebrow dark">Almost there</p>
       <h3 id="modalTitle">Checkout coming soon</h3>
-      <p>Online payments will connect via <strong>Stripe</strong> shortly. Your bag has been saved on this device, so nothing will be lost.</p>
+      <p>Secure card payments will connect via <strong>Stripe</strong> soon. Your bag has been saved on this device, so nothing will be lost.</p>
       <div class="modal-summary" id="modalSummary"></div>
       <button class="btn btn-dark btn-block" id="modalOk">Continue browsing</button>
     </div>
