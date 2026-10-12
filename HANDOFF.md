@@ -289,3 +289,7 @@ Still open:
 6. Don't force-push or rewrite `main` history without approval. Don't leave local servers/tunnels running.
 7. Update this HANDOFF.md whenever you change structure, data schema, hosting, or workflow.
 8. Don't invent facts (ingredients, sourcing, locations, reviews, press, cashtags). Use only what the founder has provided.
+
+## Website credit (2026-10-12)
+
+- 2026-10-12: Added footer credit "Website designed by Sherwinn E Brice" on every page, linking to a new order form page at `order-website/` (relative links for the GitHub Pages subpath). It emails dupesletsgo@gmail.com via FormSubmit; the first submission needs the one-time FormSubmit activation.
