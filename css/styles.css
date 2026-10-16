@@ -135,6 +135,13 @@ h1 em, h2 em { white-space: nowrap; }
 .p-desc { font-size: .9rem; color: var(--muted); margin: 0 0 1.2rem; flex: 1; }
 .p-foot { display: flex; align-items: center; justify-content: space-between; gap: .8rem; border-top: 1px solid var(--line); padding-top: 1rem; }
 .p-price { font-family: var(--serif); font-size: 1.6rem; font-weight: 500; color: var(--cocoa-800); }
+.p-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .5rem; }
+.p-noimg { width: 100%; height: 100%; display: grid; place-items: center; font-family: var(--display); font-size: 1.4rem; letter-spacing: .12em; color: var(--copper); background: linear-gradient(135deg, var(--cream), var(--ivory)); }
+/* Exactly four products: one row of four on wide screens (no lone card on a second row) */
+@media (min-width: 1025px) {
+  .product-grid:has(> :nth-child(4):last-child) { grid-template-columns: repeat(4, 1fr); max-width: 1240px; gap: 1.5rem; }
+  .product-grid:has(> :nth-child(4):last-child) .p-body h3 { font-size: 1.55rem; }
+}
 
 /* Band */
 .band { background: linear-gradient(135deg, var(--copper), #7a4422); color: var(--cream); text-align: center; padding: 4.5rem 0; }

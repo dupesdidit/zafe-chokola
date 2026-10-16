@@ -11,8 +11,19 @@
  *               to replace the stock placeholder — no code change needed.
  *  - fallback:  stock (Unsplash) image used automatically if the local file is missing.
  *  - badge:     optional corner label; "" for none
- *  - stripePaymentLink: future Stripe Payment Link URL. Not used yet — checkout is "coming soon".
+ *  - stripePaymentLink: Stripe Payment Link URL (https://buy.stripe.com/...). When set, the card gets a "Buy now" button.
+ *
+ * LIVE CATALOGUE: the site normally reads products from the Google Sheet
+ * "Zafe Chokola - Products (edit me)" (see ZC_SHEET below and HANDOFF.md). This list is the
+ * instant FALLBACK, used when the sheet can't be reached within ZC_SHEET.timeoutMs.
+ * Sheet rows whose Name matches a product here (same slug, e.g. "Spooky Bars" -> spooky-bars)
+ * reuse its local photo as a backup if the sheet's photo fails to load.
  */
+window.ZC_SHEET = {
+  id: "10kDmLhHrREoqNFyllBuvo9YnMyxJG_Vj1IQW-Q_H6_8", // "" turns the sheet off (fallback list only)
+  tab: "Products",
+  timeoutMs: 3000
+};
 window.ZC_PRODUCTS = [
   {
     id: "spooky-bars",
@@ -48,6 +59,18 @@ window.ZC_PRODUCTS = [
     image: "images/products/kids-pops.jpg",
     fallback: "https://images.unsplash.com/photo-1582176604856-e824b4736522?w=900&q=80&auto=format&fit=crop",
     badge: "For kids",
+    stripePaymentLink: ""
+  },
+  {
+    id: "the-gilded-star-bar",
+    category: "collection",
+    name: "The Gilded Star Bar",
+    detail: "One-time only",
+    description: "A one-time limited drop: a faceted chocolate bar finished with a white drizzle and golden flecks. Made once. When it\u2019s gone, it\u2019s gone.",
+    price: 8,
+    image: "images/products/gilded-star-bar.jpg",
+    fallback: "",
+    badge: "Limited drop",
     stripePaymentLink: ""
   }
 ];

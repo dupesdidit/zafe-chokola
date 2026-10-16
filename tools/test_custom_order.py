@@ -56,7 +56,7 @@ async def page(b, base, vp, mob):
     pg = await ctx.new_page()
     pg.on("console", lambda m: errors.append("console: " + m.text) if m.type == "error" else None)
     pg.on("pageerror", lambda e: errors.append("pageerror: " + str(e)))
-    await pg.goto(base + "index.html#custom-order", wait_until="networkidle")
+    await pg.goto(base + "index.html?sheet=off#custom-order", wait_until="networkidle")
     return ctx, pg
 
 async def main():

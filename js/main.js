@@ -1,10 +1,12 @@
 /* Zafe Chokola — UI + client-side cart (localStorage). No real payments. */
 (function () {
   "use strict";
-  var PRODUCTS = window.ZC_PRODUCTS || [];
+  var FALLBACK = window.ZC_PRODUCTS || [];
+  var PRODUCTS = FALLBACK;
   var STORAGE_KEY = "zafeChokola.cart.v1";
   var byId = {};
-  PRODUCTS.forEach(function (p) { byId[p.id] = p; });
+  function indexProducts() { byId = {}; PRODUCTS.forEach(function (p) { byId[p.id] = p; }); }
+  indexProducts();
 
   var $ = function (s) { return document.querySelector(s); };
   var money = function (n) { return "$" + n.toFixed(2); };
@@ -53,6 +55,7 @@
     if (img.complete && img.naturalWidth === 0 && img.getAttribute("src")) { img.src = img.dataset.fallback; delete img.dataset.fallback; }
   });
   function imgTag(p, alt, lazy) {
+    if (!p.image) return '<div class="p-noimg" aria-hidden="true">Zafe Chokola</div>';
     return '<img src="' + esc(p.image) + '"' + (p.fallback ? ' data-fallback="' + esc(p.fallback) + '"' : "") +
       ' alt="' + esc(alt) + '"' + (lazy ? ' loading="lazy"' : "") + " />";
   }
@@ -66,12 +69,15 @@
           imgTag(p, p.name, true) +
         "</div>" +
         '<div class="p-body">' +
-          '<p class="p-detail">' + esc(p.detail) + "</p>" +
+          (p.detail ? '<p class="p-detail">' + esc(p.detail) + "</p>" : "") +
           "<h3>" + esc(p.name) + "</h3>" +
           '<p class="p-desc">' + esc(p.description) + "</p>" +
           '<div class="p-foot">' +
             '<span class="p-price">' + money(p.price) + "</span>" +
-            '<button class="btn btn-small ' + (isGift ? "btn-gold" : "btn-dark") + '" data-add="' + esc(p.id) + '">Add to bag</button>' +
+            '<span class="p-actions">' +
+              (p.stripePaymentLink ? '<a class="btn btn-small btn-gold" href="' + esc(p.stripePaymentLink) + '" rel="noopener">Buy now</a>' : "") +
+              '<button class="btn btn-small ' + (isGift ? "btn-gold" : "btn-dark") + '" data-add="' + esc(p.id) + '">Add to bag</button>' +
+            "</span>" +
           "</div>" +
         "</div>" +
       "</article>"
@@ -82,6 +88,109 @@
     // Gift boxes: none offered right now. If "gift" products are added later, add a #giftGrid section back to index.html.
     var giftGrid = $("#giftGrid");
     if (giftGrid) giftGrid.innerHTML = PRODUCTS.filter(function (p) { return p.category === "gift"; }).map(function (p) { return card(p, true); }).join("");
+  }
+
+  /* ---------- Live catalogue from the Google Sheet ----------
+     Fallback-first: the hardcoded list (or the last good sheet copy cached in localStorage) renders
+     immediately; the sheet is fetched in the background with a timeout and swapped in when it arrives.
+     ?sheet=<id> in the page URL overrides the sheet id (testing); ?sheet=off disables it. */
+  var SHEET = window.ZC_SHEET || {};
+  var SHEET_CACHE_KEY = "zafeChokola.sheet.v1";
+  function slug(s) { return String(s).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
+  function parseCSV(text) {
+    var rows = [], row = [], f = "", q = false, i, c;
+    text = String(text).replace(/^\uFEFF/, "");
+    for (i = 0; i < text.length; i++) {
+      c = text[i];
+      if (q) {
+        if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; }
+        else f += c;
+      } else if (c === '"') q = true;
+      else if (c === ",") { row.push(f); f = ""; }
+      else if (c === "\n" || c === "\r") {
+        if (c === "\r" && text[i + 1] === "\n") i++;
+        row.push(f); rows.push(row); row = []; f = "";
+      } else f += c;
+    }
+    if (f !== "" || row.length) { row.push(f); rows.push(row); }
+    return rows;
+  }
+  function photoUrl(u) {
+    u = String(u || "").trim();
+    if (!u) return "";
+    var m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?(?:.*&)?id=|uc\?(?:.*&)?id=|thumbnail\?(?:.*&)?id=)([\w-]{10,})/) ||
+            u.match(/docs\.google\.com\/uc\?(?:.*&)?id=([\w-]{10,})/);
+    if (m) return "https://drive.google.com/thumbnail?id=" + m[1] + "&sz=w1200";
+    return /^https:\/\//i.test(u) ? u : "";
+  }
+  function truthy(v) { return /^(true|yes|y|1|x|✓|✔)$/i.test(String(v).trim()); }
+  function rowsToProducts(rows) {
+    if (!rows.length) return null;
+    var head = rows[0].map(function (h) { return slug(h); });
+    var col = function (name) { return head.indexOf(name); };
+    var iName = col("name"), iPrice = col("price");
+    if (iName < 0 || iPrice < 0) return null;
+    var get = function (r, name) { var i = col(name); return i < 0 ? "" : String(r[i] == null ? "" : r[i]).trim(); };
+    var fbById = {}; FALLBACK.forEach(function (p) { fbById[p.id] = p; });
+    var seen = {}, out = [];
+    rows.slice(1).forEach(function (r, n) {
+      var name = get(r, "name");
+      var price = parseFloat(get(r, "price").replace(/[^0-9.\-]/g, ""));
+      if (!name || !(price >= 0)) return;
+      if (col("show") >= 0 && !truthy(get(r, "show"))) return;
+      var id = slug(name) || "item-" + n;
+      if (seen[id]) return; seen[id] = 1;
+      var fb = fbById[id] || {};
+      var photo = photoUrl(get(r, "photo"));
+      var stripe = get(r, "stripe-payment-link");
+      var sort = parseFloat(get(r, "sort-order"));
+      out.push({
+        id: id, category: "collection", name: name,
+        detail: get(r, "price-note"),
+        description: get(r, "description"),
+        price: Math.round(price * 100) / 100,
+        image: photo || fb.image || "",
+        fallback: photo ? (fb.image || fb.fallback || "") : (fb.fallback || ""),
+        badge: get(r, "category"),
+        stripePaymentLink: /^https:\/\//i.test(stripe) ? stripe : "",
+        _sort: isNaN(sort) ? 1e6 + n : sort, _n: n
+      });
+    });
+    out.sort(function (a, b) { return a._sort - b._sort || a._n - b._n; });
+    return out;
+  }
+  function useProducts(list) {
+    if (!list) return false;
+    PRODUCTS = list; indexProducts();
+    renderProducts();
+    cart = load(); renderCart();   // re-read the stored bag against the new catalogue
+    document.documentElement.setAttribute("data-catalogue", list === FALLBACK ? "fallback" : "sheet");
+    return true;
+  }
+  function loadSheet() {
+    var qs = location.search.match(/[?&]sheet=([^&]*)/);
+    var id = qs ? decodeURIComponent(qs[1]) : SHEET.id;
+    if (!id || id === "off" || !window.fetch) return;
+    var cached; try { cached = localStorage.getItem(SHEET_CACHE_KEY + ":" + id); } catch (e) {}
+    if (cached) { try { useProducts(rowsToProducts(parseCSV(cached))); } catch (e) {} }
+    var url = "https://docs.google.com/spreadsheets/d/" + encodeURIComponent(id) +
+      "/gviz/tq?tqx=out:csv&headers=1&sheet=" + encodeURIComponent(SHEET.tab || "Products");
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, SHEET.timeoutMs || 3000);
+    fetch(url, { signal: ctrl ? ctrl.signal : undefined, credentials: "omit", cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("sheet " + r.status); return r.text(); })
+      .then(function (text) {
+        clearTimeout(timer);
+        var list = rowsToProducts(parseCSV(text));
+        if (!list || !list.length) throw new Error("sheet empty or headings changed");
+        if (text !== cached) useProducts(list);
+        else document.documentElement.setAttribute("data-catalogue", "sheet");
+        try { localStorage.setItem(SHEET_CACHE_KEY + ":" + id, text); } catch (e) {}
+      })
+      .catch(function (err) {
+        clearTimeout(timer);
+        if (window.console) console.info("Zafe Chokola: using built-in product list (" + (err && err.name === "AbortError" ? "sheet timed out" : err && err.message) + ")");
+      });
   }
 
   /* ---------- Cart rendering ---------- */
@@ -107,7 +216,7 @@
           imgTag(p, "", false) +
           '<div class="ci-info">' +
             '<p class="ci-name">' + esc(p.name) + "</p>" +
-            '<p class="ci-detail">' + esc(p.detail) + " · " + money(p.price) + "</p>" +
+            '<p class="ci-detail">' + (p.detail ? esc(p.detail) + " · " : "") + money(p.price) + "</p>" +
             '<div class="qty">' +
               '<button data-dec="' + id + '" aria-label="Decrease quantity">&minus;</button>' +
               '<input type="number" min="0" max="99" value="' + q + '" data-qty="' + id + '" aria-label="Quantity" />' +
@@ -281,4 +390,6 @@
 
   renderProducts();
   renderCart();
+  document.documentElement.setAttribute("data-catalogue", "fallback");
+  loadSheet();
 })();

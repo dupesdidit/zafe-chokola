@@ -293,3 +293,18 @@ Still open:
 ## Website credit (2026-10-12)
 
 - 2026-10-12: Added footer credit "Website designed by Sherwinn E Brice" on every page, linking to a new order form page at `order-website/` (relative links for the GitHub Pages subpath). It emails dupesletsgo@gmail.com via FormSubmit; the first submission needs the one-time FormSubmit activation.
+
+## Live product catalogue from Google Sheets (2026-10-16)
+- **Hosting now:** Cloudflare Pages project `zafe-chokola` → https://zafechokola.com (+ www, zafechocolate.com), **direct upload** of `/workspace/zafe-upload` (clean export: `git archive` minus tools/, images/stock-backup, genelle-uploads, *.md, .gitignore, .nojekyll, images/README.md). Zip: `/workspace/zafe.zip` (index.html at root). The GitHub Pages copy still exists.
+- **Sheet:** "Zafe Chokola - Products (edit me)", id `10kDmLhHrREoqNFyllBuvo9YnMyxJG_Vj1IQW-Q_H6_8`, in Drive folder "Zafe Chokola - Photos & Logo Uploads". Tab `Products` (columns: Show, Name, Price, Price note, Category, Description, Photo, Stripe payment link, Sort order) + tab `How to use`. Built from `/workspace/shared/zafe-chokola/sheet/build_sheet.py` (xlsx → converted on upload).
+- **It must be "Anyone with the link: Viewer"** or the site can't read it (it then silently uses the built-in list). Same for any Drive photo used in the Photo column.
+- **How the site uses it (`js/main.js` → `loadSheet`)**: renders the built-in list (`js/products.js`) — or the last good sheet copy cached in localStorage — instantly, then fetches
+  `https://docs.google.com/spreadsheets/d/<id>/gviz/tq?tqx=out:csv&headers=1&sheet=Products` with a 3 s timeout (`window.ZC_SHEET` in products.js). On success it swaps the cards in.
+  - Column headings are matched by name (case/spacing-insensitive), so column order doesn't matter, but names must stay.
+  - Show: TRUE/yes/1 shows; anything else hides. Price: "$8.00" or "8" both fine. Sort order ascending, ties keep sheet order.
+  - Card mapping: Category → corner badge; Price note → small line above the name; Stripe link (https only) → "Buy now" button next to Add to bag.
+  - Product id (cart key) = slug of Name ("Spooky Bars" → `spooky-bars`). Renaming a product empties it from existing bags; ids matching products.js reuse its local photo if the sheet photo fails.
+  - Drive links (`/file/d/<id>`, `open?id=`, `uc?id=`) → `https://drive.google.com/thumbnail?id=<id>&sz=w1200`. Other https image URLs used as-is.
+  - `?sheet=<id>` overrides the sheet (testing), `?sheet=off` disables it.
+- **Tests:** `python3 tools/test_sheet.py` (live / mocked CSV / bad id / timeout → `screenshots/sheet-*.png`). `tools/test_custom_order.py` loads with `?sheet=off`.
+- Google caches the gviz output: edits usually show in about 1–5 minutes. Visitors with a cached copy see it first, then the fresh one.
