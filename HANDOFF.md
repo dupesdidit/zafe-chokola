@@ -292,7 +292,7 @@ Still open:
 
 ## Website credit (2026-10-12)
 
-- 2026-10-12: Added footer credit "Website designed by Sherwinn E Brice" on every page, linking to a new order form page at `order-website/` (relative links for the GitHub Pages subpath). It emails dupesletsgo@gmail.com via FormSubmit; the first submission needs the one-time FormSubmit activation.
+- 2026-10-12: Added footer credit "Website designed by Sherwinn E Brice" on every page, linking to a new order form page at `order-website/` (relative links for the GitHub Pages subpath). It emails me@sherwinnbrice.com via FormSubmit; the first submission needs the one-time FormSubmit activation.
 
 ## Live product catalogue from Google Sheets (2026-10-16)
 - **Hosting now:** Cloudflare Pages project `zafe-chokola` → https://zafechokola.com (+ www, zafechocolate.com), **direct upload** of `/workspace/zafe-upload` (clean export: `git archive` minus tools/, images/stock-backup, genelle-uploads, *.md, .gitignore, .nojekyll, images/README.md). Zip: `/workspace/zafe.zip` (index.html at root). The GitHub Pages copy still exists.
